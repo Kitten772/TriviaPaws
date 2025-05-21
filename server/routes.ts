@@ -12,6 +12,13 @@ const activeGames = new Map();
 // Hardcoded questions in case the API key doesn't work
 const catTriviaQuestions = [
   {
+    question: "Which famous internet cat was known for its grumpy facial expression?",
+    options: ["Lil Bub", "Grumpy Cat", "Maru", "Keyboard Cat"],
+    correctIndex: 1,
+    explanation: "Grumpy Cat (real name Tardar Sauce) became famous for her permanently grumpy facial expression caused by feline dwarfism.",
+    category: "Famous Cats"
+  },
+  {
     question: "What is the average lifespan of an indoor cat?",
     options: ["5-8 years", "10-15 years", "15-20 years", "20-25 years"],
     correctIndex: 1,
@@ -182,7 +189,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Validate the generated questions
         questions = z.array(triviaQuestion).parse(questionData.questions);
       } catch (error) {
-        console.log("Falling back to hardcoded questions:", error.message);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.log("Falling back to hardcoded questions:", errorMessage);
         // Use hardcoded questions as fallback
         if (validatedBody.category === "cats") {
           questions = catTriviaQuestions;
