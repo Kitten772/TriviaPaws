@@ -11,6 +11,16 @@ import { z } from "zod";
 // Store active games in memory
 const activeGames = new Map();
 
+// Function to shuffle an array randomly (Fisher-Yates algorithm)
+function shuffleArray<T>(array: T[]): T[] {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
 // Hardcoded questions in case the API key doesn't work
 const catTriviaQuestions = [
   {
@@ -186,27 +196,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (validatedBody.category === "cats") {
           // For cats category, get questions where category contains 'cat' or 'Cat'
-          dbQuestions = await db.select()
+          // Get more questions than needed so we can shuffle them
+          const allCatQuestions = await db.select()
             .from(triviaQuestions)
             .where(
               and(
                 eq(triviaQuestions.difficulty, validatedBody.difficulty),
                 sql`lower(${triviaQuestions.category}) like '%cat%'`
               )
-            )
-            .limit(validatedBody.questionsCount);
+            );
+          
+          // Shuffle the questions randomly
+          dbQuestions = shuffleArray(allCatQuestions)
+            .slice(0, validatedBody.questionsCount);
         } else {
           // For mixed category, get a mix of all animal questions
-          dbQuestions = await db.select()
+          const allMixedQuestions = await db.select()
             .from(triviaQuestions)
-            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
-            .limit(validatedBody.questionsCount);
+            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty));
+            
+          // Shuffle the questions randomly
+          dbQuestions = shuffleArray(allMixedQuestions)
+            .slice(0, validatedBody.questionsCount);
         }
         
         // If we have enough database questions, use them
         if (dbQuestions.length >= validatedBody.questionsCount) {
           // Convert database questions to our API format
-          questions = dbQuestions.map(q => ({
+          questions = dbQuestions.map((q: any) => ({
             question: q.question,
             options: q.options as string[],
             correctIndex: q.correctIndex,
