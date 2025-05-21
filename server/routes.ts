@@ -169,16 +169,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const validatedBody = schema.parse(req.body);
       
-      // Use hardcoded questions instead of generating from OpenAI
+      // Try to generate questions using OpenAI, fall back to hardcoded if there's an error
       let questions;
-      if (validatedBody.category === "cats") {
-        questions = catTriviaQuestions;
-      } else {
-        questions = mixedAnimalTriviaQuestions;
+      try {
+        // Generate questions using OpenAI
+        const questionData = await generateTriviaQuestions(
+          validatedBody.difficulty,
+          validatedBody.category,
+          validatedBody.questionsCount
+        );
+        
+        // Validate the generated questions
+        questions = z.array(triviaQuestion).parse(questionData.questions);
+      } catch (error) {
+        console.log("Falling back to hardcoded questions:", error.message);
+        // Use hardcoded questions as fallback
+        if (validatedBody.category === "cats") {
+          questions = catTriviaQuestions;
+        } else {
+          questions = mixedAnimalTriviaQuestions;
+        }
+        // Validate the hardcoded questions
+        questions = z.array(triviaQuestion).parse(questions);
       }
-      
-      // Validate the hardcoded questions
-      questions = z.array(triviaQuestion).parse(questions);
       
       // Create a unique game ID
       const gameId = randomUUID();
