@@ -3,7 +3,9 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateTriviaQuestions } from "./openai";
 import { randomUUID } from "crypto";
-import { triviaQuestion, triviaGameState } from "@shared/schema";
+import { triviaQuestion, triviaGameState, triviaQuestions } from "@shared/schema";
+import { db } from "./db";
+import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 
 // Store active games in memory
@@ -179,15 +181,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Try to generate questions using OpenAI, fall back to hardcoded if there's an error
       let questions;
       try {
-        // Generate questions using OpenAI
-        const questionData = await generateTriviaQuestions(
-          validatedBody.difficulty,
-          validatedBody.category,
-          validatedBody.questionsCount
-        );
+        // Try to get questions from the database first
+        let dbQuestions = [];
         
-        // Validate the generated questions
-        questions = z.array(triviaQuestion).parse(questionData.questions);
+        if (validatedBody.category === "cats") {
+          // For cats category, get questions where category contains 'cat' or 'Cat'
+          dbQuestions = await db.select()
+            .from(triviaQuestions)
+            .where(
+              and(
+                eq(triviaQuestions.difficulty, validatedBody.difficulty),
+                sql`lower(${triviaQuestions.category}) like '%cat%'`
+              )
+            )
+            .limit(validatedBody.questionsCount);
+        } else {
+          // For mixed category, get a mix of all animal questions
+          dbQuestions = await db.select()
+            .from(triviaQuestions)
+            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
+            .limit(validatedBody.questionsCount);
+        }
+        
+        // If we have enough database questions, use them
+        if (dbQuestions.length >= validatedBody.questionsCount) {
+          // Convert database questions to our API format
+          questions = dbQuestions.map(q => ({
+            question: q.question,
+            options: q.options as string[],
+            correctIndex: q.correctIndex,
+            explanation: q.explanation,
+            category: q.category,
+            image: q.image || undefined
+          }));
+          
+          console.log(`Using ${questions.length} questions from database`);
+        } else {
+          // Not enough in database, fall back to OpenAI
+          console.log("Not enough questions in database, generating with OpenAI");
+          const questionData = await generateTriviaQuestions(
+            validatedBody.difficulty,
+            validatedBody.category,
+            validatedBody.questionsCount
+          );
+          
+          // Validate the generated questions
+          questions = z.array(triviaQuestion).parse(questionData.questions);
+          
+          // Store the generated questions in the database for future use
+          try {
+            const questionsToInsert = questions.map(q => ({
+              question: q.question,
+              options: q.options,
+              correctIndex: q.correctIndex,
+              explanation: q.explanation,
+              category: q.category,
+              difficulty: validatedBody.difficulty,
+              image: q.image
+            }));
+            
+            await db.insert(triviaQuestions).values(questionsToInsert);
+            console.log(`Stored ${questionsToInsert.length} new questions in database`);
+          } catch (dbError) {
+            console.error("Error storing questions in database:", dbError);
+          }
+        }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.log("Falling back to hardcoded questions:", errorMessage);
