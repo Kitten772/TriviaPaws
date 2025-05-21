@@ -1,5 +1,6 @@
 import { db } from "../server/db";
 import { triviaQuestions } from "../shared/schema";
+import { sql } from "drizzle-orm";
 import fs from 'fs';
 import path from 'path';
 
@@ -44,7 +45,7 @@ async function restoreQuestions(backupFile?: string) {
     
     // Check if we need to clear existing questions first
     const existingCount = await db.select({ count: sql`count(*)` }).from(triviaQuestions);
-    if (existingCount[0].count > 0) {
+    if (existingCount.length > 0 && (existingCount[0] as any).count > 0) {
       const shouldClear = process.argv.includes('--clear');
       
       if (shouldClear) {
