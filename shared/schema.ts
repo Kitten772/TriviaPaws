@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, varchar, json, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -16,7 +16,28 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-// Trivia game types
+// Define database table for trivia questions
+export const triviaQuestions = pgTable("trivia_questions", {
+  id: serial("id").primaryKey(),
+  question: text("question").notNull(),
+  options: json("options").$type<string[]>().notNull(),
+  correctIndex: integer("correct_index").notNull(),
+  explanation: text("explanation").notNull(),
+  category: varchar("category", { length: 100 }).notNull(),
+  difficulty: varchar("difficulty", { length: 20 }).notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertTriviaQuestionSchema = createInsertSchema(triviaQuestions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertTriviaQuestion = z.infer<typeof insertTriviaQuestionSchema>;
+export type TriviaQuestionRecord = typeof triviaQuestions.$inferSelect;
+
+// Trivia game types for API/frontend
 export const triviaQuestion = z.object({
   question: z.string(),
   options: z.array(z.string()).length(4),
