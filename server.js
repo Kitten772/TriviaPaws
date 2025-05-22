@@ -1,6 +1,6 @@
 /**
  * Production server for Purrfect Trivia
- * This standalone file is designed to work with Render's deployment system
+ * Specifically designed for Render deployment
  */
 import express from 'express';
 import { createServer } from 'http';
@@ -9,13 +9,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { Pool } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from 'ws';
-import pg from 'pg';
 
 // Get current directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+console.log("Starting Purrfect Trivia production server");
+console.log("Current directory:", __dirname);
+console.log("Files in directory:", fs.readdirSync(__dirname));
 
 // Configure database connection
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -27,12 +28,29 @@ const PORT = process.env.PORT || 3000;
 // Parse JSON requests
 app.use(express.json());
 
-// Serve static files from client/dist
-app.use(express.static(path.join(__dirname, 'client/dist')));
+// Check for dist directory
+const distPath = path.join(__dirname, 'dist/public');
+if (fs.existsSync(distPath)) {
+  console.log("Found dist/public directory");
+  console.log("Files in dist/public:", fs.readdirSync(distPath));
+  
+  // Serve static files from the dist/public directory
+  app.use(express.static(distPath));
+} else {
+  console.log("dist/public directory not found");
+  console.log("Files in dist:", fs.existsSync(path.join(__dirname, 'dist')) ? 
+    fs.readdirSync(path.join(__dirname, 'dist')) : 
+    "dist directory not found");
+}
 
 // Simple health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', env: process.env.NODE_ENV });
+  res.json({ 
+    status: 'ok', 
+    env: process.env.NODE_ENV,
+    distPathExists: fs.existsSync(distPath),
+    directory: __dirname
+  });
 });
 
 // Basic trivia questions endpoint
@@ -51,23 +69,16 @@ app.get('/api/trivia/sample', (_req, res) => {
       correctIndex: 1,
       explanation: "Indoor cats typically live between 10-15 years, though some may live up to 20 years.",
       category: "Cat Facts"
-    },
-    {
-      question: "Which of these cat breeds is known for having no fur?",
-      options: ["Persian", "Maine Coon", "Sphynx", "Siamese"],
-      correctIndex: 2,
-      explanation: "The Sphynx cat is known for being hairless, although they may have a fine layer of fuzz.",
-      category: "Cat Breeds"
     }
   ];
   
   res.json({ questions: sampleQuestions });
 });
 
-// Database backup endpoints - these use the direct database connection
+// Database backup endpoint
 app.get("/api/backup/trivia-questions", async (_req, res) => {
   try {
-    // Use basic pg query to avoid schema dependency
+    // Simple query to get questions from the database
     const result = await pool.query('SELECT * FROM trivia_questions LIMIT 1000');
     const allQuestions = result.rows;
     
@@ -75,11 +86,9 @@ app.get("/api/backup/trivia-questions", async (_req, res) => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `trivia-backup-${timestamp}.json`;
     
-    // Set headers for file download
     res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
     res.setHeader('Content-Type', 'application/json');
     
-    // Send the data
     res.json({
       timestamp: new Date().toISOString(),
       questionCount: allQuestions.length,
@@ -94,82 +103,59 @@ app.get("/api/backup/trivia-questions", async (_req, res) => {
   }
 });
 
-// Admin page to access backup functionality
-app.get("/admin/backup", (_req, res) => {
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Purrfect Trivia - Backup</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          max-width: 800px;
-          margin: 0 auto;
-          padding: 20px;
-          line-height: 1.6;
-          color: #333;
-        }
-        .container {
-          background-color: #f5f5f5;
-          border-radius: 8px;
-          padding: 20px;
-          margin-top: 20px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-          color: #4a56a6;
-          border-bottom: 2px solid #4a56a6;
-          padding-bottom: 10px;
-        }
-        .button {
-          display: inline-block;
-          background-color: #4a56a6;
-          color: white;
-          padding: 10px 15px;
-          text-decoration: none;
-          border-radius: 4px;
-          font-weight: bold;
-          margin-top: 15px;
-        }
-        .stats {
-          margin-top: 20px;
-          font-size: 0.9em;
-        }
-        .info {
-          background-color: #e0f7fa;
-          padding: 15px;
-          border-radius: 4px;
-          margin: 15px 0;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Purrfect Trivia - Database Backup</h1>
-      
-      <div class="container">
-        <h2>Backup Trivia Questions</h2>
-        <p>Click the button below to download a backup of all trivia questions in the database.</p>
-        
-        <div class="info">
-          <p><strong>Note:</strong> Keep your backup files safe! You may need them if your database is reset or if you want to transfer questions to another instance.</p>
-        </div>
-        
-        <a href="/api/backup/trivia-questions" class="button">Download Database Backup</a>
-      </div>
-    </body>
-    </html>
-  `;
-  
-  res.setHeader('Content-Type', 'text/html');
-  res.send(html);
+// Trivia game API endpoints with more debugging
+app.post("/api/trivia/start", async (req, res) => {
+  try {
+    console.log("Received start request:", req.body);
+    
+    const difficulty = req.body.difficulty || "medium";
+    const category = req.body.category || "mixed";
+    const totalQuestions = req.body.questionCount || 5;
+    
+    console.log(`Starting game: difficulty=${difficulty}, category=${category}, questions=${totalQuestions}`);
+    
+    // Simple response for now
+    res.json({
+      gameId: `game-${Date.now()}`,
+      difficulty,
+      category,
+      totalQuestions
+    });
+  } catch (error) {
+    console.error("Error starting game:", error);
+    res.status(500).json({ message: "Failed to start game", error: error.message });
+  }
 });
 
-// For any other request, send the React app
+// Catch-all route to serve the frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  if (fs.existsSync(path.join(distPath, 'index.html'))) {
+    res.sendFile(path.join(distPath, 'index.html'));
+  } else {
+    res.send(`
+      <html>
+        <head>
+          <title>Purrfect Trivia</title>
+          <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+            h1 { color: #4a56a6; }
+            .container { background-color: #f5f5f5; padding: 20px; border-radius: 8px; }
+          </style>
+        </head>
+        <body>
+          <h1>Purrfect Trivia</h1>
+          <div class="container">
+            <h2>Server is running</h2>
+            <p>The API is available at:</p>
+            <ul>
+              <li><a href="/api/health">/api/health</a> - Server health check</li>
+              <li><a href="/api/trivia/sample">/api/trivia/sample</a> - Sample trivia questions</li>
+            </ul>
+          </div>
+        </body>
+      </html>
+    `);
+  }
 });
 
 // Start the server
