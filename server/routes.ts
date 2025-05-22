@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateTriviaQuestions } from "./openai";
 import { randomUUID } from "crypto";
-import { triviaQuestion, triviaGameState, triviaQuestions } from "@shared/schema";
+import { triviaQuestion, triviaGameState, triviaQuestions, type TriviaQuestion } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
