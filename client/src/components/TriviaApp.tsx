@@ -60,7 +60,7 @@ export default function TriviaApp() {
       {/* Footer Section */}
       <footer className="bg-white py-4 px-6 shadow-inner">
         <div className="container mx-auto text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Purrfect Trivia. Powered by ChatGPT API. 🐾</p>
+          <p>© {new Date().getFullYear()} Purrfect Trivia. Powered by databases and apis. 🐾</p>
         </div>
       </footer>
     </div>
