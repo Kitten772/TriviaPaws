@@ -2,11 +2,10 @@
  * Script to generate massive sets of trivia questions (25,000 cat questions and 25,000 animal questions)
  * This combines existing questions with new generated variations to create a truly massive database
  */
-import { Pool } from '@neondatabase/serverless';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const { Pool } = require('@neondatabase/serverless');
+const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -272,8 +271,7 @@ async function generateMassiveTriviaSets() {
       questions: backupQuestions
     };
     
-    const dirname = path.dirname(fileURLToPath(import.meta.url));
-    const backupPath = path.join(dirname, '..', 'backups', 'massive-trivia-backup.json');
+    const backupPath = path.join(__dirname, '..', 'backups', 'massive-trivia-backup.json');
     
     fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2));
     console.log(`Backup created at ${backupPath}`);
@@ -301,4 +299,6 @@ async function generateMassiveTriviaSets() {
 }
 
 // Run the script
-generateMassiveTriviaSets();
+generateMassiveTriviaSets().catch(err => {
+  console.error('Error in main script execution:', err);
+});
