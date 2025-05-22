@@ -114,12 +114,90 @@ app.post("/api/trivia/start", async (req, res) => {
     
     console.log(`Starting game: difficulty=${difficulty}, category=${category}, questions=${totalQuestions}`);
     
-    // Simple response for now
+    // Create a basic set of questions based on the selected category
+    const questions = category === "cats" ? 
+      [
+        {
+          question: "Which famous internet cat was known for its grumpy facial expression?",
+          options: ["Lil Bub", "Grumpy Cat", "Maru", "Keyboard Cat"],
+          correctIndex: 1,
+          explanation: "Grumpy Cat (real name Tardar Sauce) became famous for her permanently grumpy facial expression caused by feline dwarfism.",
+          category: "Famous Cats"
+        },
+        {
+          question: "What is the average lifespan of an indoor cat?",
+          options: ["5-8 years", "10-15 years", "15-20 years", "20-25 years"],
+          correctIndex: 1,
+          explanation: "Indoor cats typically live between 10-15 years, though some may live up to 20 years.",
+          category: "Cat Facts"
+        },
+        {
+          question: "Which of these cat breeds is known for having no fur?",
+          options: ["Persian", "Maine Coon", "Sphynx", "Siamese"],
+          correctIndex: 2,
+          explanation: "The Sphynx cat is known for being hairless, although they may have a fine layer of fuzz.",
+          category: "Cat Breeds"
+        },
+        {
+          question: "How many toes does a normal cat have on its front paws?",
+          options: ["4", "5", "6", "7"],
+          correctIndex: 1,
+          explanation: "Most cats have 5 toes on their front paws and 4 on their back paws, for a total of 18.",
+          category: "Cat Anatomy"
+        },
+        {
+          question: "What is a group of cats called?",
+          options: ["A clowder", "A murder", "A pride", "A pack"],
+          correctIndex: 0,
+          explanation: "A group of cats is called a clowder, while a group of kittens is called a kindle.",
+          category: "Cat Terminology"
+        }
+      ] :
+      [
+        {
+          question: "Which animal has the longest lifespan?",
+          options: ["Elephant", "Tortoise", "Parrot", "Whale"],
+          correctIndex: 1,
+          explanation: "Some tortoise species can live over 150 years, with the oldest confirmed tortoise living to 188 years.",
+          category: "Animal Lifespans"
+        },
+        {
+          question: "Which cat has the loudest roar?",
+          options: ["Lion", "Tiger", "Jaguar", "Leopard"],
+          correctIndex: 1,
+          explanation: "Tigers have the loudest roar among big cats, which can be heard up to 2 miles away.",
+          category: "Wild Cats"
+        },
+        {
+          question: "What is a baby rabbit called?",
+          options: ["Kit", "Pup", "Cub", "Joey"],
+          correctIndex: 0,
+          explanation: "A baby rabbit is called a kit or kitten. They're born hairless and with their eyes closed.",
+          category: "Animal Babies"
+        },
+        {
+          question: "Which animal has the best sense of smell?",
+          options: ["Dog", "Bear", "Shark", "Elephant"],
+          correctIndex: 0,
+          explanation: "Dogs have up to 300 million olfactory receptors in their noses, compared to about 6 million in humans.",
+          category: "Animal Senses"
+        },
+        {
+          question: "Which bird can fly backwards?",
+          options: ["Eagle", "Hummingbird", "Penguin", "Ostrich"],
+          correctIndex: 1,
+          explanation: "Hummingbirds are the only birds that can fly backwards, upside down, and hover in mid-air.",
+          category: "Bird Facts"
+        }
+      ];
+      
+    // Response with the game details and questions
     res.json({
       gameId: `game-${Date.now()}`,
       difficulty,
       category,
-      totalQuestions
+      totalQuestions,
+      questions: questions.slice(0, totalQuestions)
     });
   } catch (error) {
     console.error("Error starting game:", error);
