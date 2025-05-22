@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Install dependencies
-npm install
+# Update browserslist database
+echo "Updating browserslist database..."
+npx update-browserslist-db@latest
 
-# Run the standard build
+# Continue with normal build process
+echo "Building application..."
 npm run build
-
-# Copy our production server file
-cp server/index-prod.ts dist/
-cd dist
-node --loader ts-node/esm index-prod.ts
