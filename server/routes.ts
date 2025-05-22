@@ -191,13 +191,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedBody = schema.parse(req.body);
       
       // Use questionCount parameter (new) or fallback to questionsCount (old) for compatibility
-      const questionCount = validatedBody.questionCount || questionCount || 10;
+      const totalQuestions: number = validatedBody.questionCount || validatedBody.questionsCount || 10;
       
       // Try to generate questions using OpenAI, fall back to hardcoded if there's an error
       let questions;
       try {
         // Try to get questions from the database first
         let dbQuestions = [];
+        
+        console.log(`Looking for ${totalQuestions} ${validatedBody.category} questions with ${validatedBody.difficulty} difficulty`);
         
         if (validatedBody.category === "cats") {
           // For cats category, get a truly varied set of questions
@@ -216,20 +218,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Make sure we have a good variety by getting different types of questions
           const uniqueCategories = new Set();
           const variedQuestions = [];
+          const questionTexts = new Set(); // Track question text to avoid duplicates
           
           // First pass: add questions with unique categories
           for (const question of catQuestions) {
-            if (!uniqueCategories.has(question.category) && variedQuestions.length < questionCount) {
+            // Clean up any question numbering (like "Quiz #123: What is...")
+            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+            
+            if (!uniqueCategories.has(question.category) && 
+                variedQuestions.length < questionCount && 
+                !questionTexts.has(cleanedQuestion.toLowerCase())) {
               uniqueCategories.add(question.category);
-              variedQuestions.push(question);
+              questionTexts.add(cleanedQuestion.toLowerCase());
+              
+              // Create a cleaned version of the question
+              variedQuestions.push({
+                ...question,
+                question: cleanedQuestion
+              });
             }
           }
           
           // Second pass: fill remaining slots with other questions
           for (const question of catQuestions) {
+            // Clean up any question numbering
+            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+            
             if (variedQuestions.length < questionCount && 
-                !variedQuestions.includes(question)) {
-              variedQuestions.push(question);
+                !questionTexts.has(cleanedQuestion.toLowerCase())) {
+              questionTexts.add(cleanedQuestion.toLowerCase());
+              
+              // Create a cleaned version of the question
+              variedQuestions.push({
+                ...question,
+                question: cleanedQuestion
+              });
             }
           }
           
@@ -247,20 +270,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Ensure we get a variety of animal types
           const uniqueCategories = new Set();
           const variedQuestions = [];
+          const questionTexts = new Set(); // Track question text to avoid duplicates
           
           // First pass: add questions with unique categories
           for (const question of allAnimalQuestions) {
-            if (!uniqueCategories.has(question.category) && variedQuestions.length < questionCount) {
+            // Clean up any question numbering (like "Quiz #123: What is...")
+            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+            
+            if (!uniqueCategories.has(question.category) && 
+                variedQuestions.length < questionCount && 
+                !questionTexts.has(cleanedQuestion.toLowerCase())) {
               uniqueCategories.add(question.category);
-              variedQuestions.push(question);
+              questionTexts.add(cleanedQuestion.toLowerCase());
+              
+              // Create a cleaned version of the question
+              variedQuestions.push({
+                ...question,
+                question: cleanedQuestion
+              });
             }
           }
           
           // Second pass: fill remaining slots with other questions
           for (const question of allAnimalQuestions) {
+            // Clean up any question numbering
+            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+            
             if (variedQuestions.length < questionCount && 
-                !variedQuestions.includes(question)) {
-              variedQuestions.push(question);
+                !questionTexts.has(cleanedQuestion.toLowerCase())) {
+              questionTexts.add(cleanedQuestion.toLowerCase());
+              
+              // Create a cleaned version of the question
+              variedQuestions.push({
+                ...question,
+                question: cleanedQuestion
+              });
             }
           }
           
