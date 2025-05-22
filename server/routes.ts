@@ -196,27 +196,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (validatedBody.category === "cats") {
           // For cats category, get questions where category contains 'cat' or 'Cat'
-          // Get more questions than needed so we can shuffle them
-          const allCatQuestions = await db.select()
+          // Get a random sample of questions using SQL RANDOM() function
+          dbQuestions = await db.select()
             .from(triviaQuestions)
             .where(
               and(
                 eq(triviaQuestions.difficulty, validatedBody.difficulty),
                 sql`lower(${triviaQuestions.category}) like '%cat%'`
               )
-            );
-          
-          // Shuffle the questions randomly
-          dbQuestions = shuffleArray(allCatQuestions)
+            )
+            .orderBy(sql`RANDOM()`)
+            .limit(validatedBody.questionsCount * 3);
+            
+          // Additional shuffle in JavaScript for even more randomness
+          dbQuestions = shuffleArray(dbQuestions)
             .slice(0, validatedBody.questionsCount);
         } else {
-          // For mixed category, get a mix of all animal questions
-          const allMixedQuestions = await db.select()
+          // For mixed category, get a truly random sample of all animal questions
+          dbQuestions = await db.select()
             .from(triviaQuestions)
-            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty));
+            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
+            .orderBy(sql`RANDOM()`)
+            .limit(validatedBody.questionsCount * 5);
             
-          // Shuffle the questions randomly
-          dbQuestions = shuffleArray(allMixedQuestions)
+          // Additional shuffle in JavaScript for maximum randomness
+          dbQuestions = shuffleArray(dbQuestions)
             .slice(0, validatedBody.questionsCount);
         }
         
