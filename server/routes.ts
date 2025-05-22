@@ -214,8 +214,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .from(triviaQuestions)
             .where(
               and(
-                eq(triviaQuestions.difficulty, validatedBody.difficulty),
-                sql`lower(${triviaQuestions.category}) like '%cat%'`
+                eq(triviaQuestions.difficulty, validatedBody.difficulty)
+                // Don't restrict by category - we want all cat questions
               )
             )
             .orderBy(sql`RANDOM()`)
