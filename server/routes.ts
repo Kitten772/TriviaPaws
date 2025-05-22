@@ -419,20 +419,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create a unique game ID
       const gameId = randomUUID();
       
-      // Ensure no duplicate questions by filtering based on question text
-      const seenQuestions = new Set();
+      // Track seen questions with a set to prevent duplicates
+      const seenQuestionTexts = new Set();
       const uniqueQuestions = [];
       
+      // Strong filter to ensure absolutely no duplicates
       for (const q of questions) {
         // Get cleaned question text and use it as identifier
-        const questionKey = cleanQuestionText(q.question).toLowerCase();
+        const questionText = (q.question || '').toLowerCase();
+        const cleanedText = cleanQuestionText(questionText).trim();
         
-        // Only include if we haven't seen this question yet
-        if (!seenQuestions.has(questionKey)) {
-          seenQuestions.add(questionKey);
-          uniqueQuestions.push(q);
+        // Skip if empty or if we've already seen this question
+        if (!cleanedText || seenQuestionTexts.has(cleanedText)) {
+          continue;
+        }
+        
+        // Add this unique question to our results
+        seenQuestionTexts.add(cleanedText);
+        uniqueQuestions.push({
+          ...q,
+          question: cleanedText.charAt(0).toUpperCase() + cleanedText.slice(1) // Capitalize first letter
+        });
+        
+        // Stop if we have enough questions
+        if (uniqueQuestions.length >= totalQuestions) {
+          break;
         }
       }
+      
+      console.log(`Filtered ${questions.length} questions down to ${uniqueQuestions.length} unique questions`);
       
       // Use unique questions (or fallback to original list if something went wrong)
       const dedupedQuestions = uniqueQuestions.length > 0 ? uniqueQuestions : questions;
