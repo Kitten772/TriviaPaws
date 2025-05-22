@@ -1,18 +1,12 @@
 /**
- * Script to generate massive sets of trivia questions (25,000 cat questions and 25,000 animal questions)
- * This combines existing questions with new generated variations to create a truly massive database
+ * Script to generate a massive backup file with 50,000 trivia questions
+ * (25,000 cat questions and 25,000 animal questions)
+ * This creates a backup file that can be loaded into the database with restoreTriviaQuestions.ts
  */
-import { Pool } from '@neondatabase/serverless';
-import dotenv from 'dotenv';
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-// Load environment variables
-dotenv.config();
-
-// Connect to database
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 // Templates for generating cat questions
 const catQuestionTemplates = {
@@ -100,7 +94,22 @@ const catSpecificAnswers = {
     correctIndex: 2,
     explanation: "Cats purr not only when content but also when injured or stressed. The frequency of purring (25-150 Hz) can promote healing and bone growth."
   },
-  // Add more specific answers here
+  // More specific answers for hard-coded questions
+  "What color are most cats' eyes at birth?": {
+    options: ["Green", "Yellow", "Blue", "Brown"],
+    correctIndex: 2,
+    explanation: "Most kittens are born with blue eyes. The eye color typically changes as they age, usually between 4-6 weeks old."
+  },
+  "What is the most common coat pattern in cats?": {
+    options: ["Tabby", "Solid", "Calico", "Colorpoint"],
+    correctIndex: 0,
+    explanation: "The tabby pattern is the most common coat pattern in domestic cats, characterized by distinctive stripes, whorls, or spots."
+  },
+  "What is the name of the genetic condition that causes cats to have extra toes?": {
+    options: ["Polydactyly", "Hyperdactyly", "Multitoeism", "Extrapedia"],
+    correctIndex: 0,
+    explanation: "Polydactyly is a genetic condition that causes cats to have extra toes. It's especially common in certain regions like Boston and the East Coast of the USA."
+  },
 };
 
 // Function to generate variations of questions
@@ -169,107 +178,47 @@ function generateGenericQuestion(questionText, category, difficulty) {
 }
 
 // Main function to generate and store questions
-async function generateMassiveTriviaSets() {
+async function generateMassiveBackup() {
   try {
     console.log("Starting massive trivia set generation...");
     
-    // Get existing question counts
-    const catCountResult = await pool.query("SELECT COUNT(*) FROM trivia_questions WHERE LOWER(category) LIKE '%cat%'");
-    const catCount = parseInt(catCountResult.rows[0].count);
+    // Define the target counts - exactly 25,000 each with 1:1:1 difficulty ratio
+    const questionsPerCategory = 25000;
+    const questionsPerDifficulty = Math.ceil(questionsPerCategory / 3); // ~8,333 questions per difficulty
     
-    const animalCountResult = await pool.query("SELECT COUNT(*) FROM trivia_questions WHERE LOWER(category) NOT LIKE '%cat%'");
-    const animalCount = parseInt(animalCountResult.rows[0].count);
-    
-    console.log(`Current counts - Cat questions: ${catCount}, Other animal questions: ${animalCount}`);
-    
-    // Calculate how many questions we need to generate
-    const catQuestionsNeeded = Math.max(0, 25000 - catCount);
-    const animalQuestionsNeeded = Math.max(0, 25000 - animalCount);
-    
-    console.log(`Need to generate: ${catQuestionsNeeded} cat questions and ${animalQuestionsNeeded} animal questions`);
-    
-    // Generate exactly equal distribution (1:1:1 ratio) across difficulties
-    // Each difficulty will get exactly 8,333-8,334 questions (total 25,000)
-    const catQuestionsPerDifficulty = Math.ceil(25000 / 3);
-    const animalQuestionsPerDifficulty = Math.ceil(25000 / 3);
+    console.log(`Generating exactly ${questionsPerCategory} questions per category (cat/animal)`);
+    console.log(`Each difficulty level will have ~${questionsPerDifficulty} questions`);
     
     // Generate cat questions
-    let newCatQuestions = [];
-    
-    if (catQuestionsNeeded > 0) {
-      console.log("Generating cat questions...");
-      newCatQuestions = [
-        ...generateQuestionVariations(catQuestionTemplates, catQuestionsPerDifficulty, "easy", "Cat Facts"),
-        ...generateQuestionVariations(catQuestionTemplates, catQuestionsPerDifficulty, "medium", "Cat Facts"),
-        ...generateQuestionVariations(catQuestionTemplates, catQuestionsPerDifficulty, "hard", "Cat Facts"),
-      ];
-    }
+    console.log("Generating cat questions...");
+    let catQuestions = [
+      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "easy", "Cat Facts"),
+      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "medium", "Cat Facts"),
+      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "hard", "Cat Facts"),
+    ];
     
     // Generate animal questions
-    let newAnimalQuestions = [];
+    console.log("Generating animal questions...");
+    let animalQuestions = [
+      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "easy", "Animal Facts"),
+      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "medium", "Animal Facts"),
+      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "hard", "Animal Facts"),
+    ];
     
-    if (animalQuestionsNeeded > 0) {
-      console.log("Generating animal questions...");
-      newAnimalQuestions = [
-        ...generateQuestionVariations(animalQuestionTemplates, animalQuestionsPerDifficulty, "easy", "Animal Facts"),
-        ...generateQuestionVariations(animalQuestionTemplates, animalQuestionsPerDifficulty, "medium", "Animal Facts"),
-        ...generateQuestionVariations(animalQuestionTemplates, animalQuestionsPerDifficulty, "hard", "Animal Facts"),
-      ];
-    }
+    // Combine all questions
+    const allQuestions = [...catQuestions, ...animalQuestions];
+    console.log(`Generated ${allQuestions.length} total questions`);
     
-    // Combine all new questions
-    const allNewQuestions = [...newCatQuestions, ...newAnimalQuestions];
-    console.log(`Generated ${allNewQuestions.length} new questions`);
-    
-    // Insert questions in batches
-    if (allNewQuestions.length > 0) {
-      const BATCH_SIZE = 100;
-      let insertedCount = 0;
-      
-      for (let i = 0; i < allNewQuestions.length; i += BATCH_SIZE) {
-        const batch = allNewQuestions.slice(i, i + BATCH_SIZE);
-        
-        // Create the SQL query for the batch
-        const valueStrings = batch.map((_, index) => 
-          `($${index * 6 + 1}, $${index * 6 + 2}, $${index * 6 + 3}, $${index * 6 + 4}, $${index * 6 + 5}, $${index * 6 + 6})`
-        );
-        
-        const query = `
-          INSERT INTO trivia_questions 
-          (question, options, correct_index, explanation, category, difficulty)
-          VALUES ${valueStrings.join(', ')}
-          ON CONFLICT (question) DO NOTHING
-        `;
-        
-        const values = batch.flatMap(q => [
-          q.question, 
-          JSON.stringify(q.options),
-          q.correctIndex,
-          q.explanation,
-          q.category,
-          q.difficulty
-        ]);
-        
-        try {
-          await pool.query(query, values);
-          insertedCount += batch.length;
-          console.log(`Inserted ${insertedCount}/${allNewQuestions.length} questions`);
-        } catch (error) {
-          console.error(`Error inserting batch ${i}-${i+BATCH_SIZE}:`, error.message);
-        }
-      }
-    }
-    
-    // Create a backup of the new massive question set
-    console.log("Creating backup of expanded trivia database...");
-    const { rows: backupQuestions } = await pool.query('SELECT * FROM trivia_questions');
-    
+    // Create a backup file
     const backupData = {
       timestamp: new Date().toISOString(),
-      questionCount: backupQuestions.length,
-      catQuestionCount: catCount + newCatQuestions.length,
-      animalQuestionCount: animalCount + newAnimalQuestions.length,
-      questions: backupQuestions
+      questionCount: allQuestions.length,
+      catQuestionCount: catQuestions.length,
+      animalQuestionCount: animalQuestions.length,
+      questions: allQuestions.map((q, index) => ({
+        id: index + 1, // Add an ID for database import
+        ...q
+      }))
     };
     
     const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -278,29 +227,28 @@ async function generateMassiveTriviaSets() {
     fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2));
     console.log(`Backup created at ${backupPath}`);
     
-    // Final summary
-    const finalStatsResult = await pool.query(`
-      SELECT 
-        COUNT(*) as total,
-        COUNT(*) FILTER (WHERE LOWER(category) LIKE '%cat%') as cat_questions,
-        COUNT(*) FILTER (WHERE LOWER(category) NOT LIKE '%cat%') as animal_questions
-      FROM trivia_questions
-    `);
+    // Summary of what was generated
+    console.log("\nFinal counts:");
+    console.log(`Total questions: ${backupData.questionCount}`);
+    console.log(`Cat questions: ${backupData.catQuestionCount}`);
+    console.log(`Animal questions: ${backupData.animalQuestionCount}`);
     
-    const stats = finalStatsResult.rows[0];
-    console.log("Final database stats:");
-    console.log(`Total questions: ${stats.total}`);
-    console.log(`Cat questions: ${stats.cat_questions}`);
-    console.log(`Other animal questions: ${stats.animal_questions}`);
+    // Calculate difficulty distribution
+    const easyCount = allQuestions.filter(q => q.difficulty === 'easy').length;
+    const mediumCount = allQuestions.filter(q => q.difficulty === 'medium').length;
+    const hardCount = allQuestions.filter(q => q.difficulty === 'hard').length;
+    
+    console.log(`\nDifficulty distribution:`);
+    console.log(`Easy: ${easyCount} (${(easyCount/allQuestions.length*100).toFixed(1)}%)`);
+    console.log(`Medium: ${mediumCount} (${(mediumCount/allQuestions.length*100).toFixed(1)}%)`);
+    console.log(`Hard: ${hardCount} (${(hardCount/allQuestions.length*100).toFixed(1)}%)`);
     
   } catch (error) {
-    console.error("Error generating trivia sets:", error);
-  } finally {
-    await pool.end();
+    console.error("Error generating backup:", error);
   }
 }
 
 // Run the script
-generateMassiveTriviaSets().catch(err => {
+generateMassiveBackup().catch(err => {
   console.error('Error in main script execution:', err);
 });
