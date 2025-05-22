@@ -103,101 +103,158 @@ app.get("/api/backup/trivia-questions", async (_req, res) => {
   }
 });
 
-// Trivia game API endpoints with more debugging
+// Trivia game API endpoints
 app.post("/api/trivia/start", async (req, res) => {
   try {
     console.log("Received start request:", req.body);
     
     const difficulty = req.body.difficulty || "medium";
     const category = req.body.category || "mixed";
-    const totalQuestions = req.body.questionCount || 5;
+    const totalQuestions = req.body.questionCount || req.body.questionsCount || 5;
     
     console.log(`Starting game: difficulty=${difficulty}, category=${category}, questions=${totalQuestions}`);
     
-    // Create a basic set of questions based on the selected category
-    const questions = category === "cats" ? 
-      [
-        {
-          question: "Which famous internet cat was known for its grumpy facial expression?",
-          options: ["Lil Bub", "Grumpy Cat", "Maru", "Keyboard Cat"],
-          correctIndex: 1,
-          explanation: "Grumpy Cat (real name Tardar Sauce) became famous for her permanently grumpy facial expression caused by feline dwarfism.",
-          category: "Famous Cats"
-        },
-        {
-          question: "What is the average lifespan of an indoor cat?",
-          options: ["5-8 years", "10-15 years", "15-20 years", "20-25 years"],
-          correctIndex: 1,
-          explanation: "Indoor cats typically live between 10-15 years, though some may live up to 20 years.",
-          category: "Cat Facts"
-        },
-        {
-          question: "Which of these cat breeds is known for having no fur?",
-          options: ["Persian", "Maine Coon", "Sphynx", "Siamese"],
-          correctIndex: 2,
-          explanation: "The Sphynx cat is known for being hairless, although they may have a fine layer of fuzz.",
-          category: "Cat Breeds"
-        },
-        {
-          question: "How many toes does a normal cat have on its front paws?",
-          options: ["4", "5", "6", "7"],
-          correctIndex: 1,
-          explanation: "Most cats have 5 toes on their front paws and 4 on their back paws, for a total of 18.",
-          category: "Cat Anatomy"
-        },
-        {
-          question: "What is a group of cats called?",
-          options: ["A clowder", "A murder", "A pride", "A pack"],
-          correctIndex: 0,
-          explanation: "A group of cats is called a clowder, while a group of kittens is called a kindle.",
-          category: "Cat Terminology"
-        }
-      ] :
-      [
-        {
-          question: "Which animal has the longest lifespan?",
-          options: ["Elephant", "Tortoise", "Parrot", "Whale"],
-          correctIndex: 1,
-          explanation: "Some tortoise species can live over 150 years, with the oldest confirmed tortoise living to 188 years.",
-          category: "Animal Lifespans"
-        },
-        {
-          question: "Which cat has the loudest roar?",
-          options: ["Lion", "Tiger", "Jaguar", "Leopard"],
-          correctIndex: 1,
-          explanation: "Tigers have the loudest roar among big cats, which can be heard up to 2 miles away.",
-          category: "Wild Cats"
-        },
-        {
-          question: "What is a baby rabbit called?",
-          options: ["Kit", "Pup", "Cub", "Joey"],
-          correctIndex: 0,
-          explanation: "A baby rabbit is called a kit or kitten. They're born hairless and with their eyes closed.",
-          category: "Animal Babies"
-        },
-        {
-          question: "Which animal has the best sense of smell?",
-          options: ["Dog", "Bear", "Shark", "Elephant"],
-          correctIndex: 0,
-          explanation: "Dogs have up to 300 million olfactory receptors in their noses, compared to about 6 million in humans.",
-          category: "Animal Senses"
-        },
-        {
-          question: "Which bird can fly backwards?",
-          options: ["Eagle", "Hummingbird", "Penguin", "Ostrich"],
-          correctIndex: 1,
-          explanation: "Hummingbirds are the only birds that can fly backwards, upside down, and hover in mid-air.",
-          category: "Bird Facts"
-        }
-      ];
+    // Try to get questions from the database first
+    let dbQuestions = [];
+    try {
+      // Query based on category and difficulty
+      let query;
+      if (category === "cats") {
+        query = `
+          SELECT * FROM trivia_questions 
+          WHERE difficulty = $1 
+          AND LOWER(category) LIKE '%cat%'
+          ORDER BY RANDOM() 
+          LIMIT $2
+        `;
+      } else {
+        query = `
+          SELECT * FROM trivia_questions 
+          WHERE difficulty = $1 
+          ORDER BY RANDOM() 
+          LIMIT $2
+        `;
+      }
       
+      // Execute query
+      const result = await pool.query(query, [difficulty, totalQuestions * 2]);
+      console.log(`Found ${result.rows.length} questions in database for ${category}/${difficulty}`);
+      
+      // Format results
+      if (result.rows.length > 0) {
+        dbQuestions = result.rows.map(q => ({
+          question: q.question,
+          options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
+          correctIndex: q.correct_index || q.correctIndex,
+          explanation: q.explanation,
+          category: q.category,
+          image: q.image
+        }));
+      }
+    } catch (dbError) {
+      console.error("Database error, using fallback questions:", dbError.message);
+    }
+    
+    // Fallback questions if database doesn't have enough
+    const fallbackCatQuestions = [
+      {
+        question: "Which famous internet cat was known for its grumpy facial expression?",
+        options: ["Lil Bub", "Grumpy Cat", "Maru", "Keyboard Cat"],
+        correctIndex: 1,
+        explanation: "Grumpy Cat (real name Tardar Sauce) became famous for her permanently grumpy facial expression caused by feline dwarfism.",
+        category: "Famous Cats"
+      },
+      {
+        question: "What is the average lifespan of an indoor cat?",
+        options: ["5-8 years", "10-15 years", "15-20 years", "20-25 years"],
+        correctIndex: 1,
+        explanation: "Indoor cats typically live between 10-15 years, though some may live up to 20 years.",
+        category: "Cat Facts"
+      },
+      {
+        question: "Which of these cat breeds is known for having no fur?",
+        options: ["Persian", "Maine Coon", "Sphynx", "Siamese"],
+        correctIndex: 2,
+        explanation: "The Sphynx cat is known for being hairless, although they may have a fine layer of fuzz.",
+        category: "Cat Breeds"
+      },
+      {
+        question: "How many toes does a normal cat have on its front paws?",
+        options: ["4", "5", "6", "7"],
+        correctIndex: 1,
+        explanation: "Most cats have 5 toes on their front paws and 4 on their back paws, for a total of 18.",
+        category: "Cat Anatomy"
+      },
+      {
+        question: "What is a group of cats called?",
+        options: ["A clowder", "A murder", "A pride", "A pack"],
+        correctIndex: 0,
+        explanation: "A group of cats is called a clowder, while a group of kittens is called a kindle.",
+        category: "Cat Terminology"
+      }
+    ];
+    
+    const fallbackMixedQuestions = [
+      {
+        question: "Which animal has the longest lifespan?",
+        options: ["Elephant", "Tortoise", "Parrot", "Whale"],
+        correctIndex: 1,
+        explanation: "Some tortoise species can live over 150 years, with the oldest confirmed tortoise living to 188 years.",
+        category: "Animal Lifespans"
+      },
+      {
+        question: "Which cat has the loudest roar?",
+        options: ["Lion", "Tiger", "Jaguar", "Leopard"],
+        correctIndex: 1,
+        explanation: "Tigers have the loudest roar among big cats, which can be heard up to 2 miles away.",
+        category: "Wild Cats"
+      },
+      {
+        question: "What is a baby rabbit called?",
+        options: ["Kit", "Pup", "Cub", "Joey"],
+        correctIndex: 0,
+        explanation: "A baby rabbit is called a kit or kitten. They're born hairless and with their eyes closed.",
+        category: "Animal Babies"
+      },
+      {
+        question: "Which animal has the best sense of smell?",
+        options: ["Dog", "Bear", "Shark", "Elephant"],
+        correctIndex: 0,
+        explanation: "Dogs have up to 300 million olfactory receptors in their noses, compared to about 6 million in humans.",
+        category: "Animal Senses"
+      },
+      {
+        question: "Which bird can fly backwards?",
+        options: ["Eagle", "Hummingbird", "Penguin", "Ostrich"],
+        correctIndex: 1,
+        explanation: "Hummingbirds are the only birds that can fly backwards, upside down, and hover in mid-air.",
+        category: "Bird Facts"
+      }
+    ];
+    
+    // Combine database questions with fallback if needed
+    let questions = dbQuestions;
+    
+    // If we don't have enough questions from the database, add some fallbacks
+    if (questions.length < totalQuestions) {
+      const fallbacks = category === "cats" ? fallbackCatQuestions : fallbackMixedQuestions;
+      const needed = totalQuestions - questions.length;
+      questions = [...questions, ...fallbacks.slice(0, needed)];
+    }
+    
+    // Shuffle and limit to requested number
+    questions = questions.sort(() => Math.random() - 0.5).slice(0, totalQuestions);
+    
+    // Generate a unique game ID
+    const gameId = `game-${Date.now()}`;
+    
     // Response with the game details and questions
     res.json({
-      gameId: `game-${Date.now()}`,
+      gameId,
       difficulty,
       category,
       totalQuestions,
-      questions: questions.slice(0, totalQuestions)
+      questions
     });
   } catch (error) {
     console.error("Error starting game:", error);
