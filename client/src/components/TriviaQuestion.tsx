@@ -12,7 +12,8 @@ export default function TriviaQuestion({ triviaGame }) {
     timerEnabled, 
     timer, 
     selectAnswer, 
-    nextQuestion 
+    nextQuestion,
+    stopGame
   } = triviaGame;
 
   // Options label mapping
@@ -116,17 +117,24 @@ export default function TriviaQuestion({ triviaGame }) {
             </div>
           )}
           
-          {/* Next Question Button */}
-          {hasAnswered && (
-            <div className="text-center">
+          {/* Action Buttons */}
+          <div className="text-center">
+            {hasAnswered && (
               <button 
                 onClick={nextQuestion}
-                className="bg-[#4ECDC4] text-white py-2 px-6 rounded-full font-heading font-bold hover:bg-opacity-90 transition-all shadow hover:shadow-md">
+                className="bg-[#4ECDC4] text-white py-2 px-6 rounded-full font-heading font-bold hover:bg-opacity-90 transition-all shadow hover:shadow-md mr-3">
                 Next Question
                 <i className="ri-arrow-right-line ml-1"></i>
               </button>
-            </div>
-          )}
+            )}
+            
+            <button 
+              onClick={stopGame}
+              className="bg-[#FF6B6B] text-white py-2 px-6 rounded-full font-heading font-bold hover:bg-opacity-90 transition-all shadow hover:shadow-md">
+              Stop Game
+              <i className="ri-stop-circle-line ml-1"></i>
+            </button>
+          </div>
         </div>
       )}
     </div>
