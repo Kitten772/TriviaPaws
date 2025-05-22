@@ -22,7 +22,7 @@ If you haven't already, sign up for a [Render account](https://dashboard.render.
    - **Name**: purrfect-trivia (or your preferred name)
    - **Environment**: Node
    - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `NODE_ENV=production node dist/server/prod.js`
+   - **Start Command**: `node server.js`
 
 ### 3. Add Environment Variables
 
