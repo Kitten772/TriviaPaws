@@ -452,22 +452,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Randomize option order for each question
       const randomizedQuestions = dedupedQuestions.map(question => {
-        // Create pairs of [option, isCorrect]
-        const optionPairs = question.options.map((option, index) => ({
-          option,
-          isCorrect: index === question.correctIndex
-        }));
+        // Ensure we have valid options array
+        const options = Array.isArray(question.options) 
+          ? question.options 
+          : typeof question.options === 'string' 
+            ? JSON.parse(question.options) 
+            : ["Option A", "Option B", "Option C", "Option D"];
         
-        // Shuffle the options
-        const shuffledPairs = shuffleArray(optionPairs);
+        // Determine correct answer
+        const correctIndex = typeof question.correctIndex === 'number' 
+          ? question.correctIndex 
+          : typeof question.correct_index === 'number'
+            ? question.correct_index
+            : 0;
         
-        // Find the new index of the correct answer
-        const newCorrectIndex = shuffledPairs.findIndex(pair => pair.isCorrect);
+        // Get the correct answer
+        const correctAnswer = options[correctIndex];
+        
+        // Create a completely new shuffled array of options
+        const shuffledOptions = [...options];
+        
+        // Use strong Fisher-Yates shuffle implementation
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+          // Get random index
+          const j = Math.floor(Math.random() * (i + 1));
+          // Swap elements
+          [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        
+        // Find where the correct answer ended up
+        const newCorrectIndex = shuffledOptions.findIndex(opt => opt === correctAnswer);
+        
+        // Log to debug
+        console.log(`Question: ${question.question.substring(0, 30)}...`);
+        console.log(`Original correct index: ${correctIndex}, New correct index: ${newCorrectIndex}`);
         
         // Return question with shuffled options
         return {
           ...question,
-          options: shuffledPairs.map(pair => pair.option),
+          options: shuffledOptions,
           correctIndex: newCorrectIndex
         };
       });
