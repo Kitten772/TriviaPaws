@@ -22,19 +22,21 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-// Function to clean up question text by removing all numbers and prefixes
+// Function to clean up question text by removing all numbers from entire question
 function cleanQuestionText(question: string): string {
-  // Strong cleaning to remove all numbers and common prefixes from the beginning
+  // Remove ALL numbers from the entire question
   let cleanedQuestion = question;
   
-  // First pass: Remove any standard patterns like "Quiz #123:"
-  cleanedQuestion = cleanedQuestion.replace(/^.*?(?:Quiz|Question|Q|Trivia|Cat|Animal|Facts?)\s*#?\d+\s*:?\s*/i, '');
+  // Remove all digits from the entire question
+  cleanedQuestion = cleanedQuestion.replace(/\d+/g, '');
   
-  // Second pass: Remove ANY content with numbers at the beginning
-  cleanedQuestion = cleanedQuestion.replace(/^[^a-zA-Z]*\d+[^a-zA-Z]*/, '');
+  // Remove extra spaces and punctuation that might be left
+  cleanedQuestion = cleanedQuestion.replace(/\s+/g, ' ');
+  cleanedQuestion = cleanedQuestion.replace(/\s*([,.?!:;])\s*/g, '$1 ');
+  cleanedQuestion = cleanedQuestion.replace(/\s+/g, ' ');
   
-  // Third pass: Remove any leading non-alphabetic characters
-  cleanedQuestion = cleanedQuestion.replace(/^[^a-zA-Z]+/, '');
+  // Remove any remaining leading or trailing whitespace
+  cleanedQuestion = cleanedQuestion.trim();
   
   return cleanedQuestion;
 }
@@ -445,10 +447,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
           continue;
         }
         
-        // Further clean any remaining numbering patterns like "Quiz #123:", "Question 456:", etc.
+        // Remove ALL numbers from the entire question
         let finalText = cleanedText;
-        finalText = finalText.replace(/^(quiz|question|q|trivia)[\s#.:]*\d+[\s#.:]*\s*/i, '');
-        finalText = finalText.replace(/^\d+[\s#.:]*/g, ''); // Remove any leading numbers with separators
+        // First remove all digits from the question
+        finalText = finalText.replace(/\d+/g, '');
+        // Clean up any extra spaces or weird punctuation that might be left
+        finalText = finalText.replace(/\s+/g, ' ');
+        finalText = finalText.replace(/\s*([,.?!:;])\s*/g, '$1 ');
+        finalText = finalText.replace(/\s+/g, ' ');
+        // Make sure the first letter is capitalized
         finalText = finalText.replace(/^(what|which|how|when|why|who|is|are|do|can)/, match => match.charAt(0).toUpperCase() + match.slice(1));
         
         // Add this unique question to our results
