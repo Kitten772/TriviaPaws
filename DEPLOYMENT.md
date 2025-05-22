@@ -49,12 +49,23 @@ Add the following environment variables in the Render dashboard:
 
 ## Backup and Restore
 
-Since Render databases are ephemeral on some plans, make sure to regularly backup your trivia questions:
+Since Render databases are ephemeral on some plans, make sure to regularly backup your trivia questions using the built-in backup feature:
 
-1. Connect to your application's shell in the Render dashboard
-2. Run `npm run backup` to create a backup file
-3. Download the backup file from the Render dashboard
-4. If needed, upload a backup file and run `npm run restore [filename]` to restore your questions
+### Using the Web Backup Tool
+
+1. Visit `/admin/backup` on your deployed application (e.g., `https://your-app.onrender.com/admin/backup`)
+2. Click the "Download Database Backup" button 
+3. Save the JSON backup file in a safe location
+4. This backup contains all your trivia questions and can be used to restore the database later
+
+### Manual Restoration
+
+To restore your database from a backup:
+
+1. Create a new instance of your application
+2. Visit the database restoration page (if available)
+3. Upload your backup file
+4. Alternatively, you can import the backup file directly into your database using a Postgres client
 
 ## Troubleshooting
 
