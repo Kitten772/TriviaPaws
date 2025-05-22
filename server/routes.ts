@@ -195,7 +195,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let dbQuestions = [];
         
         if (validatedBody.category === "cats") {
-          // For cats category, get a truly varied set of questions using our bucketing system
+          // For cats category, get a truly varied set of questions
           // This ensures we get questions from different categories and styles
           const catQuestions = await db.select()
             .from(triviaQuestions)
@@ -205,7 +205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 sql`lower(${triviaQuestions.category}) like '%cat%'`
               )
             )
-            .orderBy(sql`RANDOM() * ${triviaQuestions.random_bucket}`)
+            .orderBy(sql`RANDOM()`)
             .limit(validatedBody.questionsCount * 10);
             
           // Make sure we have a good variety by getting different types of questions
@@ -236,7 +236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const allAnimalQuestions = await db.select()
             .from(triviaQuestions)
             .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
-            .orderBy(sql`RANDOM() * ${triviaQuestions.random_bucket}`)
+            .orderBy(sql`RANDOM()`)
             .limit(validatedBody.questionsCount * 10);
             
           // Ensure we get a variety of animal types

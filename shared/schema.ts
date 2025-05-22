@@ -27,6 +27,7 @@ export const triviaQuestions = pgTable("trivia_questions", {
   difficulty: varchar("difficulty", { length: 20 }).notNull(),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow(),
+  randomBucket: integer("random_bucket"),
 });
 
 export const insertTriviaQuestionSchema = createInsertSchema(triviaQuestions).omit({
