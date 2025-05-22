@@ -30,7 +30,7 @@ async function setupInitialDatabase() {
     
     console.log(`Database contains ${questionCount} trivia questions`);
     
-    // If we have too few questions, populate with more questions
+    // If we have fewer than 1000 questions, try to restore from backup
     if (questionCount < 1000) {
       console.log("Database has fewer than 1000 questions, attempting to restore from backup");
       
@@ -92,118 +92,71 @@ async function setupInitialDatabase() {
         console.error("Error restoring from backup:", backupError.message);
       }
       
-      // If we reach here, we need to add at least some basic questions
-      console.log("Adding initial set of questions");
-      
-      try {
-        // If we have no questions, populate with initial questions
-        if (questionCount < 10) {
-          console.log("Database is empty, adding initial questions");
+      // If we reach here and still have no questions, add some basics
+      if (questionCount < 10) {
+        try {
+          console.log("Adding basic set of questions");
           
-          // Initial questions to add to database
+          // Basic questions to add to database
           const initialQuestions = [
-        // Cat questions - easy
-        {
-          question: "What is the most common eye color for cats?",
-          options: ["Blue", "Green", "Yellow", "Brown"],
-          correctIndex: 2,
-          explanation: "Yellow (or gold) is the most common eye color in cats, followed by green and copper.",
-          category: "Cat Facts",
-          difficulty: "easy"
-        },
-        {
-          question: "How many whiskers does the average cat have?",
-          options: ["8-12", "16-20", "24-28", "30-36"],
-          correctIndex: 2,
-          explanation: "Most cats have 24 whiskers, arranged in 4 rows on each cheek.",
-          category: "Cat Anatomy",
-          difficulty: "easy"
-        },
-        {
-          question: "On average, how many hours a day do cats sleep?",
-          options: ["6-8", "10-12", "14-16", "18-20"],
-          correctIndex: 2,
-          explanation: "Cats sleep 14-16 hours per day on average, which is why they're often found napping.",
-          category: "Cat Behavior",
-          difficulty: "easy"
-        },
-        // Cat questions - medium
-        {
-          question: "What is the name of the first cloned cat?",
-          options: ["Dolly", "Copy Cat", "CC", "Garfield"],
-          correctIndex: 2,
-          explanation: "The first cloned cat was named 'CC' which stood for 'Carbon Copy'. She was created at Texas A&M University in 2001.",
-          category: "Famous Cats",
-          difficulty: "medium"
-        },
-        {
-          question: "Which breed of cat is known for having no tail?",
-          options: ["Manx", "Scottish Fold", "Sphynx", "Persian"],
-          correctIndex: 0,
-          explanation: "The Manx cat is known for its naturally occurring mutation that results in a shortened tail or no tail at all.",
-          category: "Cat Breeds",
-          difficulty: "medium"
-        },
-        // Cat questions - hard
-        {
-          question: "What is the scientific name for the domestic cat?",
-          options: ["Felis catus", "Canis familiaris", "Panthera leo", "Felis silvestris"],
-          correctIndex: 0,
-          explanation: "The scientific name for the domestic cat is Felis catus, from the family Felidae.",
-          category: "Cat Science",
-          difficulty: "hard"
-        },
-        // Mixed animal questions - easy
-        {
-          question: "What color are zebras born as?",
-          options: ["Black with white stripes", "White with black stripes", "Brown", "Gray"],
-          correctIndex: 1,
-          explanation: "Zebras are born with white coats and black stripes that darken as they age.",
-          category: "Wild Animals",
-          difficulty: "easy"
-        },
-        // Mixed animal questions - medium
-        {
-          question: "What is the only bird that can fly backwards?",
-          options: ["Eagle", "Hummingbird", "Owl", "Parrot"],
-          correctIndex: 1,
-          explanation: "Hummingbirds are the only birds capable of flying backwards, thanks to their unique wing structure.",
-          category: "Bird Facts",
-          difficulty: "medium"
-        },
-        // Mixed animal questions - hard
-        {
-          question: "Which animal has the longest gestation period?",
-          options: ["Elephant", "Blue Whale", "Giraffe", "Rhinoceros"],
-          correctIndex: 0,
-          explanation: "African elephants have the longest gestation period at about 22 months.",
-          category: "Animal Reproduction",
-          difficulty: "hard"
-        },
-        {
-          question: "How many hearts does an octopus have?",
-          options: ["1", "2", "3", "8"],
-          correctIndex: 2,
-          explanation: "An octopus has three hearts: one main heart that pumps blood through the body, and two branchial hearts that pump blood through the gills.",
-          category: "Marine Life",
-          difficulty: "hard"
-        }
-      ];
-      
-      // Add questions to database
-      for (const q of initialQuestions) {
-        await pool.query(
-          `INSERT INTO trivia_questions 
-          (question, options, correct_index, explanation, category, difficulty) 
-          VALUES ($1, $2, $3, $4, $5, $6)`,
-          [q.question, JSON.stringify(q.options), q.correctIndex, q.explanation, q.category, q.difficulty]
-        );
-      }
-      
+            // Cat questions - easy
+            {
+              question: "What is the most common eye color for cats?",
+              options: ["Blue", "Green", "Yellow", "Brown"],
+              correctIndex: 2,
+              explanation: "Yellow (or gold) is the most common eye color in cats, followed by green and copper.",
+              category: "Cat Facts",
+              difficulty: "easy"
+            },
+            {
+              question: "How many whiskers does the average cat have?",
+              options: ["8-12", "16-20", "24-28", "30-36"],
+              correctIndex: 2,
+              explanation: "Most cats have 24 whiskers, arranged in 4 rows on each cheek.",
+              category: "Cat Anatomy",
+              difficulty: "easy"
+            },
+            {
+              question: "On average, how many hours a day do cats sleep?",
+              options: ["6-8", "10-12", "14-16", "18-20"],
+              correctIndex: 2,
+              explanation: "Cats sleep 14-16 hours per day on average, which is why they're often found napping.",
+              category: "Cat Behavior",
+              difficulty: "easy"
+            },
+            // Cat questions - medium
+            {
+              question: "What is the name of the first cloned cat?",
+              options: ["Dolly", "Copy Cat", "CC", "Garfield"],
+              correctIndex: 2,
+              explanation: "The first cloned cat was named 'CC' which stood for 'Carbon Copy'. She was created at Texas A&M University in 2001.",
+              category: "Famous Cats",
+              difficulty: "medium"
+            },
+            {
+              question: "Which breed of cat is known for having no tail?",
+              options: ["Manx", "Scottish Fold", "Sphynx", "Persian"],
+              correctIndex: 0,
+              explanation: "The Manx cat is known for its naturally occurring mutation that results in a shortened tail or no tail at all.",
+              category: "Cat Breeds",
+              difficulty: "medium"
+            }
+          ];
+          
+          // Add questions one by one
+          for (const q of initialQuestions) {
+            await pool.query(
+              `INSERT INTO trivia_questions 
+              (question, options, correct_index, explanation, category, difficulty) 
+              VALUES ($1, $2, $3, $4, $5, $6)`,
+              [q.question, JSON.stringify(q.options), q.correctIndex, q.explanation, q.category, q.difficulty]
+            );
+          }
+          
           console.log(`Added ${initialQuestions.length} initial questions to database`);
+        } catch (basicError) {
+          console.error("Error adding basic questions:", basicError.message);
         }
-      } catch (innerError) {
-        console.error("Error adding initial questions:", innerError.message);
       }
     }
   } catch (error) {
@@ -218,7 +171,7 @@ async function setupInitialDatabase() {
         await pool.query(`
           CREATE TABLE IF NOT EXISTS trivia_questions (
             id SERIAL PRIMARY KEY,
-            question TEXT NOT NULL,
+            question TEXT NOT NULL UNIQUE,
             options JSONB NOT NULL,
             correct_index INTEGER NOT NULL,
             explanation TEXT NOT NULL,
