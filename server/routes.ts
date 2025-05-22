@@ -184,10 +184,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const schema = z.object({
         difficulty: z.enum(["easy", "medium", "hard"]),
         category: z.enum(["cats", "mixed"]),
-        questionsCount: z.number().min(1).max(20).default(10),
+        questionCount: z.number().min(1).max(20).default(10),
+        questionsCount: z.number().min(1).max(20).optional(),
       });
       
       const validatedBody = schema.parse(req.body);
+      
+      // Use questionCount parameter (new) or fallback to questionsCount (old) for compatibility
+      const questionCount = validatedBody.questionCount || validatedBody.questionsCount || 10;
       
       // Try to generate questions using OpenAI, fall back to hardcoded if there's an error
       let questions;
@@ -207,7 +211,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               )
             )
             .orderBy(sql`RANDOM()`)
-            .limit(validatedBody.questionsCount * 10);
+            .limit(questionCount * 10);
             
           // Make sure we have a good variety by getting different types of questions
           const uniqueCategories = new Set();

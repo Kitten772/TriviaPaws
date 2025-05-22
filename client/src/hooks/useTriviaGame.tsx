@@ -44,7 +44,7 @@ export function useTriviaGame() {
         {
           difficulty: gameState.difficulty,
           category: gameState.category,
-          questionsCount: gameState.totalQuestions,
+          questionCount: gameState.totalQuestions,
         }
       );
       return response.json();
