@@ -95,12 +95,13 @@ async function setupInitialDatabase() {
       // If we reach here, we need to add at least some basic questions
       console.log("Adding initial set of questions");
       
-      // If we have no questions, populate with initial questions
-      if (questionCount < 10) {
-        console.log("Database is empty, adding initial questions");
-        
-        // Initial questions to add to database
-        const initialQuestions = [
+      try {
+        // If we have no questions, populate with initial questions
+        if (questionCount < 10) {
+          console.log("Database is empty, adding initial questions");
+          
+          // Initial questions to add to database
+          const initialQuestions = [
         // Cat questions - easy
         {
           question: "What is the most common eye color for cats?",
@@ -199,7 +200,11 @@ async function setupInitialDatabase() {
         );
       }
       
-      console.log(`Added ${initialQuestions.length} initial questions to database`);
+          console.log(`Added ${initialQuestions.length} initial questions to database`);
+        }
+      } catch (innerError) {
+        console.error("Error adding initial questions:", innerError.message);
+      }
     }
   } catch (error) {
     console.error("Error setting up initial database:", error.message);
