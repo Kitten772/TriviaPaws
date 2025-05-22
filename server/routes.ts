@@ -425,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Strong filter to ensure absolutely no duplicates
       for (const q of questions) {
-        // Get cleaned question text and use it as identifier
+        // Get cleaned question text and use it as identifier (remove all numbering and prefixes)
         const questionText = (q.question || '').toLowerCase();
         const cleanedText = cleanQuestionText(questionText).trim();
         
@@ -434,11 +434,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           continue;
         }
         
+        // Further clean any remaining numbering patterns like "Quiz #123:", "Question 456:", etc.
+        let finalText = cleanedText;
+        finalText = finalText.replace(/^(quiz|question|q|trivia)[\s#.:]*\d+[\s#.:]*\s*/i, '');
+        finalText = finalText.replace(/^\d+[\s#.:]*/g, ''); // Remove any leading numbers with separators
+        finalText = finalText.replace(/^(what|which|how|when|why|who|is|are|do|can)/, match => match.charAt(0).toUpperCase() + match.slice(1));
+        
         // Add this unique question to our results
-        seenQuestionTexts.add(cleanedText);
+        seenQuestionTexts.add(finalText);
         uniqueQuestions.push({
           ...q,
-          question: cleanedText.charAt(0).toUpperCase() + cleanedText.slice(1) // Capitalize first letter
+          question: finalText.charAt(0).toUpperCase() + finalText.slice(1) // Capitalize first letter
         });
         
         // Stop if we have enough questions
