@@ -7,6 +7,7 @@ import { triviaQuestion, triviaGameState, triviaQuestions } from "@shared/schema
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
+import { fetchExternalTriviaQuestions } from "./externalTrivia";
 
 // Store active games in memory
 const activeGames = new Map();
@@ -264,10 +265,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .slice(0, validatedBody.questionsCount);
         }
         
-        // If we have enough database questions, use them
-        if (dbQuestions.length >= validatedBody.questionsCount) {
+        // Get a few questions from external trivia API to mix in with our database questions
+        let externalQuestions: TriviaQuestion[] = [];
+        try {
+          // Try to get 2-3 questions from external API
+          const externalCount = Math.min(3, Math.floor(validatedBody.questionsCount * 0.3));
+          externalQuestions = await fetchExternalTriviaQuestions(
+            validatedBody.difficulty,
+            externalCount
+          );
+          console.log(`Got ${externalQuestions.length} questions from external API`);
+        } catch (apiError) {
+          console.log("Could not fetch external questions:", apiError);
+        }
+        
+        // If we have enough database + external questions, use them
+        const combinedQuestionsNeeded = validatedBody.questionsCount - externalQuestions.length;
+        
+        if (dbQuestions.length >= combinedQuestionsNeeded) {
           // Convert database questions to our API format
-          questions = dbQuestions.map((q: any) => ({
+          const formattedDbQuestions = dbQuestions.slice(0, combinedQuestionsNeeded).map((q: any) => ({
             question: q.question,
             options: q.options as string[],
             correctIndex: q.correctIndex,
@@ -276,35 +293,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
             image: q.image || undefined
           }));
           
-          console.log(`Using ${questions.length} questions from database`);
+          // Combine database questions with external questions
+          questions = [...formattedDbQuestions, ...externalQuestions];
+          
+          // Final shuffle to mix database and external questions
+          questions = shuffleArray(questions);
+          
+          console.log(`Using ${formattedDbQuestions.length} questions from database and ${externalQuestions.length} from external API`);
         } else {
-          // Not enough in database, fall back to OpenAI
-          console.log("Not enough questions in database, generating with OpenAI");
-          const questionData = await generateTriviaQuestions(
-            validatedBody.difficulty,
-            validatedBody.category,
-            validatedBody.questionsCount
-          );
-          
-          // Validate the generated questions
-          questions = z.array(triviaQuestion).parse(questionData.questions);
-          
-          // Store the generated questions in the database for future use
+          // Still not enough, fall back to OpenAI
+          console.log("Not enough questions in database + external API, generating with OpenAI");
           try {
-            const questionsToInsert = questions.map(q => ({
-              question: q.question,
-              options: q.options,
-              correctIndex: q.correctIndex,
-              explanation: q.explanation,
-              category: q.category,
-              difficulty: validatedBody.difficulty,
-              image: q.image
-            }));
+            const questionData = await generateTriviaQuestions(
+              validatedBody.difficulty,
+              validatedBody.category,
+              combinedQuestionsNeeded
+            );
             
-            await db.insert(triviaQuestions).values(questionsToInsert);
-            console.log(`Stored ${questionsToInsert.length} new questions in database`);
-          } catch (dbError) {
-            console.error("Error storing questions in database:", dbError);
+            // Validate the generated questions
+            const openaiQuestions = z.array(triviaQuestion).parse(questionData.questions);
+            
+            // Combine all question sources
+            questions = [...dbQuestions, ...externalQuestions, ...openaiQuestions].slice(0, validatedBody.questionsCount);
+            
+            // Final shuffle
+            questions = shuffleArray(questions);
+            
+            // Store the generated questions in the database for future use
+            try {
+              const questionsToInsert = openaiQuestions.map(q => ({
+                question: q.question,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                explanation: q.explanation,
+                category: q.category,
+                difficulty: validatedBody.difficulty,
+                image: q.image
+              }));
+              
+              await db.insert(triviaQuestions).values(questionsToInsert);
+              console.log(`Stored ${questionsToInsert.length} new OpenAI questions in database`);
+            } catch (dbError) {
+              console.error("Error storing questions in database:", dbError);
+            }
+          } catch (openaiError) {
+            // Last resort - use what we have plus hardcoded questions
+            console.log("Falling back to hardcoded questions:", openaiError);
+            const hardcodedQuestions = validatedBody.category === "cats" ? catTriviaQuestions : mixedAnimalTriviaQuestions;
+            
+            // Combine all available sources
+            questions = [...dbQuestions, ...externalQuestions, ...hardcodedQuestions]
+              .slice(0, validatedBody.questionsCount);
+            
+            // Final shuffle
+            questions = shuffleArray(questions);
           }
         }
       } catch (error) {
