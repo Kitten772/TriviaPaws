@@ -22,10 +22,21 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-// Function to clean up question text by removing numbering patterns
+// Function to clean up question text by removing all numbers and prefixes
 function cleanQuestionText(question: string): string {
-  // Remove patterns like "Quiz #123:", "Question 456:", "Cat Trivia #7:" etc.
-  return question.replace(/^.*?(?:Quiz|Question|Q|Trivia)\s*#?\d+\s*:?\s*/i, '');
+  // Strong cleaning to remove all numbers and common prefixes from the beginning
+  let cleanedQuestion = question;
+  
+  // First pass: Remove any standard patterns like "Quiz #123:"
+  cleanedQuestion = cleanedQuestion.replace(/^.*?(?:Quiz|Question|Q|Trivia|Cat|Animal|Facts?)\s*#?\d+\s*:?\s*/i, '');
+  
+  // Second pass: Remove ANY content with numbers at the beginning
+  cleanedQuestion = cleanedQuestion.replace(/^[^a-zA-Z]*\d+[^a-zA-Z]*/, '');
+  
+  // Third pass: Remove any leading non-alphabetic characters
+  cleanedQuestion = cleanedQuestion.replace(/^[^a-zA-Z]+/, '');
+  
+  return cleanedQuestion;
 }
 
 // Hardcoded questions in case the API key doesn't work
