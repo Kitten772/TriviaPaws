@@ -487,26 +487,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ? question.correct_index
             : 0;
         
-        // Get the correct answer
+        // Get the correct answer and create a completely new shuffled array of options
         const correctAnswer = options[correctIndex];
-        
-        // Create a completely new shuffled array of options
         const shuffledOptions = [...options];
         
-        // Use strong Fisher-Yates shuffle implementation
-        for (let i = shuffledOptions.length - 1; i > 0; i--) {
-          // Get random index
-          const j = Math.floor(Math.random() * (i + 1));
-          // Swap elements
-          [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
-        }
+        // Force the correct answer to be in a truly random position
+        // First remove the correct answer from our working copy
+        const withoutCorrect = options.filter(opt => opt !== correctAnswer);
         
-        // Find where the correct answer ended up
-        const newCorrectIndex = shuffledOptions.findIndex(opt => opt === correctAnswer);
+        // Choose a truly random position for the correct answer
+        const newCorrectIndex = Math.floor(Math.random() * 4); // Random position 0-3
         
-        // Log to debug
-        console.log(`Question: ${question.question.substring(0, 30)}...`);
-        console.log(`Original correct index: ${correctIndex}, New correct index: ${newCorrectIndex}`);
+        // Build new shuffled array with correct answer in the random position
+        shuffledOptions[0] = withoutCorrect[0] || "Option A";
+        shuffledOptions[1] = withoutCorrect[1] || "Option B";
+        shuffledOptions[2] = withoutCorrect[2] || "Option C";
+        shuffledOptions[3] = withoutCorrect[3] || "Option D";
+        
+        // Insert correct answer at the random position
+        shuffledOptions[newCorrectIndex] = correctAnswer;
+        
+        // No debugging logs in production
         
         // Return question with shuffled options
         return {
