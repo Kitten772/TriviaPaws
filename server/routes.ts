@@ -191,7 +191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedBody = schema.parse(req.body);
       
       // Use questionCount parameter (new) or fallback to questionsCount (old) for compatibility
-      const questionCount = validatedBody.questionCount || validatedBody.questionsCount || 10;
+      const questionCount = validatedBody.questionCount || questionCount || 10;
       
       // Try to generate questions using OpenAI, fall back to hardcoded if there's an error
       let questions;
@@ -219,7 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // First pass: add questions with unique categories
           for (const question of catQuestions) {
-            if (!uniqueCategories.has(question.category) && variedQuestions.length < validatedBody.questionsCount) {
+            if (!uniqueCategories.has(question.category) && variedQuestions.length < questionCount) {
               uniqueCategories.add(question.category);
               variedQuestions.push(question);
             }
@@ -227,7 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Second pass: fill remaining slots with other questions
           for (const question of catQuestions) {
-            if (variedQuestions.length < validatedBody.questionsCount && 
+            if (variedQuestions.length < questionCount && 
                 !variedQuestions.includes(question)) {
               variedQuestions.push(question);
             }
@@ -235,14 +235,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Final shuffle for maximum randomness
           dbQuestions = shuffleArray(variedQuestions)
-            .slice(0, validatedBody.questionsCount);
+            .slice(0, questionCount);
         } else {
           // For mixed category, get a truly varied set of questions
           const allAnimalQuestions = await db.select()
             .from(triviaQuestions)
             .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
             .orderBy(sql`RANDOM()`)
-            .limit(validatedBody.questionsCount * 10);
+            .limit(questionCount * 10);
             
           // Ensure we get a variety of animal types
           const uniqueCategories = new Set();
@@ -250,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // First pass: add questions with unique categories
           for (const question of allAnimalQuestions) {
-            if (!uniqueCategories.has(question.category) && variedQuestions.length < validatedBody.questionsCount) {
+            if (!uniqueCategories.has(question.category) && variedQuestions.length < questionCount) {
               uniqueCategories.add(question.category);
               variedQuestions.push(question);
             }
@@ -258,7 +258,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Second pass: fill remaining slots with other questions
           for (const question of allAnimalQuestions) {
-            if (variedQuestions.length < validatedBody.questionsCount && 
+            if (variedQuestions.length < questionCount && 
                 !variedQuestions.includes(question)) {
               variedQuestions.push(question);
             }
@@ -266,14 +266,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Final shuffle for maximum randomness
           dbQuestions = shuffleArray(variedQuestions)
-            .slice(0, validatedBody.questionsCount);
+            .slice(0, questionCount);
         }
         
         // Get a few questions from external trivia API to mix in with our database questions
         let externalQuestions: TriviaQuestion[] = [];
         try {
           // Try to get 2-3 questions from external API
-          const externalCount = Math.min(3, Math.floor(validatedBody.questionsCount * 0.3));
+          const externalCount = Math.min(3, Math.floor(questionCount * 0.3));
           externalQuestions = await fetchExternalTriviaQuestions(
             validatedBody.difficulty,
             externalCount
@@ -284,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
         // If we have enough database + external questions, use them
-        const combinedQuestionsNeeded = validatedBody.questionsCount - externalQuestions.length;
+        const combinedQuestionsNeeded = questionCount - externalQuestions.length;
         
         if (dbQuestions.length >= combinedQuestionsNeeded) {
           // Convert database questions to our API format
@@ -318,7 +318,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const openaiQuestions = z.array(triviaQuestion).parse(questionData.questions);
             
             // Combine all question sources
-            questions = [...dbQuestions, ...externalQuestions, ...openaiQuestions].slice(0, validatedBody.questionsCount);
+            questions = [...dbQuestions, ...externalQuestions, ...openaiQuestions].slice(0, questionCount);
             
             // Final shuffle
             questions = shuffleArray(questions);
@@ -347,7 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
             // Combine all available sources
             questions = [...dbQuestions, ...externalQuestions, ...hardcodedQuestions]
-              .slice(0, validatedBody.questionsCount);
+              .slice(0, questionCount);
             
             // Final shuffle
             questions = shuffleArray(questions);
