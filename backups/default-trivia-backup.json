@@ -1,0 +1,1410 @@
+{
+  "timestamp": "2025-05-22T18:21:10.980Z",
+  "questionCount": 108,
+  "questions": [
+    {
+      "question": "Which of these is NOT a characteristic of the Egyptian Mau cat breed?",
+      "options": [
+        "prefers ground level",
+        "enjoys water",
+        "striped pattern",
+        "silent purr"
+      ],
+      "correctIndex": 3,
+      "explanation": "silent purr is not a characteristic of Egyptian Mau cats. They are known for prefers ground level, enjoys water, and striped pattern.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Bengal cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Bengal cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Devon Rex cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Devon Rex cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Abyssinian cat breed?",
+      "options": [
+        "quiet demeanor",
+        "reserved temperament",
+        "short fur",
+        "prefers ground level"
+      ],
+      "correctIndex": 3,
+      "explanation": "prefers ground level is not a characteristic of Abyssinian cats. They are known for quiet demeanor, reserved temperament, and short fur.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which of these is a way cats communicate?",
+      "options": [
+        "Purring",
+        "Meowing",
+        "Tail positioning",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Cats use multiple methods to communicate including purring, meowing, and body language like tail positioning.",
+      "category": "Cat Behavior",
+      "difficulty": "easy"
+    },
+    {
+      "question": "How many hours per day do cats typically sleep?",
+      "options": [
+        "8-10",
+        "12-14",
+        "15-20",
+        "22-23"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cats sleep 15-20 hours per day, which is why they're often found napping in sunny spots throughout the day.",
+      "category": "Cat Behavior",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the average lifespan of a Ragdoll cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Ragdoll cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What color eyes do Russian Blue cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Russian Blue cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What color eyes do Birman cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Birman cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Burmese cat breed?",
+      "options": [
+        "no fur",
+        "folded ears",
+        "striped pattern",
+        "bushy tail"
+      ],
+      "correctIndex": 3,
+      "explanation": "bushy tail is not a characteristic of Burmese cats. They are known for no fur, folded ears, and striped pattern.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Cornish Rex cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Cornish Rex cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Ragdoll cat breed?",
+      "options": [
+        "long fur",
+        "blue eyes",
+        "stubborn personality",
+        "silent purr"
+      ],
+      "correctIndex": 3,
+      "explanation": "silent purr is not a characteristic of Ragdoll cats. They are known for long fur, blue eyes, and stubborn personality.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Siamese cat breed?",
+      "options": [
+        "green eyes",
+        "good climber",
+        "reserved temperament",
+        "short fur"
+      ],
+      "correctIndex": 3,
+      "explanation": "short fur is not a characteristic of Siamese cats. They are known for green eyes, good climber, and reserved temperament.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What color eyes do Sphynx cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sphynx cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Bengal cat breed?",
+      "options": [
+        "calico coloring",
+        "folded ears",
+        "prefers ground level",
+        "bushy tail"
+      ],
+      "correctIndex": 3,
+      "explanation": "bushy tail is not a characteristic of Bengal cats. They are known for calico coloring, folded ears, and prefers ground level.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Exotic Shorthair cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Exotic Shorthair cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do Himalayan cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Himalayan cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Sphynx cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Sphynx cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Burmese cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Burmese cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do Persian cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Persian cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Norwegian Forest cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Norwegian Forest cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Egyptian Mau cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Egyptian Mau cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Russian Blue cat breed?",
+      "options": [
+        "enjoys water",
+        "black coat",
+        "dislikes water",
+        "green eyes"
+      ],
+      "correctIndex": 3,
+      "explanation": "green eyes is not a characteristic of Russian Blue cats. They are known for enjoys water, black coat, and dislikes water.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Himalayan cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Himalayan cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Siamese cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Siamese cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do Scottish Fold cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Scottish Fold cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What color eyes do Bengal cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bengal cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Burmese cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Burmese cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Birman cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Birman cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a American Shorthair cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most American Shorthair cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Norwegian Forest cat breed?",
+      "options": [
+        "shy with strangers",
+        "bushy tail",
+        "stubborn personality",
+        "folded ears"
+      ],
+      "correctIndex": 3,
+      "explanation": "folded ears is not a characteristic of Norwegian Forest cats. They are known for shy with strangers, bushy tail, and stubborn personality.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Maine Coon cat breed?",
+      "options": [
+        "vocal personality",
+        "bushy tail",
+        "black coat",
+        "sociable with strangers"
+      ],
+      "correctIndex": 3,
+      "explanation": "sociable with strangers is not a characteristic of Maine Coon cats. They are known for vocal personality, bushy tail, and black coat.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the American Shorthair cat breed?",
+      "options": [
+        "green eyes",
+        "long fur",
+        "shy with strangers",
+        "loud purr"
+      ],
+      "correctIndex": 3,
+      "explanation": "loud purr is not a characteristic of American Shorthair cats. They are known for green eyes, long fur, and shy with strangers.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Himalayan cat breed?",
+      "options": [
+        "loud purr",
+        "long fur",
+        "ear tufts",
+        "large size"
+      ],
+      "correctIndex": 3,
+      "explanation": "large size is not a characteristic of Himalayan cats. They are known for loud purr, long fur, and ear tufts.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Devon Rex cat breed?",
+      "options": [
+        "short fur",
+        "prefers ground level",
+        "white paws",
+        "small build"
+      ],
+      "correctIndex": 3,
+      "explanation": "small build is not a characteristic of Devon Rex cats. They are known for short fur, prefers ground level, and white paws.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Persian cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Persian cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Exotic Shorthair cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Exotic Shorthair cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the British Shorthair cat breed?",
+      "options": [
+        "stubborn personality",
+        "quiet demeanor",
+        "no fur",
+        "bushy tail"
+      ],
+      "correctIndex": 3,
+      "explanation": "bushy tail is not a characteristic of British Shorthair cats. They are known for stubborn personality, quiet demeanor, and no fur.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Scottish Fold cat breed?",
+      "options": [
+        "shy with strangers",
+        "high intelligence",
+        "stubborn personality",
+        "playful attitude"
+      ],
+      "correctIndex": 3,
+      "explanation": "playful attitude is not a characteristic of Scottish Fold cats. They are known for shy with strangers, high intelligence, and stubborn personality.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do British Shorthair cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "British Shorthair cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Maine Coon cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Maine Coon cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Devon Rex cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Devon Rex cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the average lifespan of a Abyssinian cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Abyssinian cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a Scottish Fold cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most Scottish Fold cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the average lifespan of a British Shorthair cat?",
+      "options": [
+        "5-8 years",
+        "10-15 years",
+        "15-20 years",
+        "20-25 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most British Shorthair cats live between 10-15 years on average when kept as indoor pets.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do American Shorthair cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "American Shorthair cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What color eyes do Tonkinese cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tonkinese cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Cornish Rex cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cornish Rex cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Maine Coon cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Maine Coon cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do Ragdoll cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ragdoll cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What color eyes do Norwegian Forest cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Norwegian Forest cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Sphynx cat breed?",
+      "options": [
+        "good climber",
+        "dislikes water",
+        "short fur",
+        "folded ears"
+      ],
+      "correctIndex": 3,
+      "explanation": "folded ears is not a characteristic of Sphynx cats. They are known for good climber, dislikes water, and short fur.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Exotic Shorthair cat breed?",
+      "options": [
+        "high intelligence",
+        "ear tufts",
+        "stubborn personality",
+        "white paws"
+      ],
+      "correctIndex": 3,
+      "explanation": "white paws is not a characteristic of Exotic Shorthair cats. They are known for high intelligence, ear tufts, and stubborn personality.",
+      "category": "Cat Breeds",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which of these is NOT a characteristic of the Cornish Rex cat breed?",
+      "options": [
+        "blue eyes",
+        "green eyes",
+        "folded ears",
+        "quiet demeanor"
+      ],
+      "correctIndex": 3,
+      "explanation": "quiet demeanor is not a characteristic of Cornish Rex cats. They are known for blue eyes, green eyes, and folded ears.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color eyes do Abyssinian cats typically have?",
+      "options": [
+        "Blue",
+        "Green",
+        "Yellow",
+        "Copper"
+      ],
+      "correctIndex": 0,
+      "explanation": "Abyssinian cats typically have Blue eyes, which is one of their distinctive features.",
+      "category": "Cat Breeds",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the largest living bird by wingspan?",
+      "options": [
+        "Ostrich",
+        "Wandering Albatross",
+        "California Condor",
+        "Andean Condor"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Wandering Albatross has the largest wingspan of any living bird, measuring up to 3.5 meters (11.5 feet) across.",
+      "category": "Bird Facts",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which animal has the longest lifespan?",
+      "options": [
+        "Bowhead Whale",
+        "Giant Tortoise",
+        "Greenland Shark",
+        "Ocean Quahog Clam"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Greenland Shark has the longest known lifespan of any vertebrate, estimated to live up to 400-500 years.",
+      "category": "Animal Lifespans",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is a group of lions called?",
+      "options": [
+        "Pack",
+        "Pride",
+        "Colony",
+        "Herd"
+      ],
+      "correctIndex": 1,
+      "explanation": "A group of lions is called a pride, typically consisting of related females, their cubs, and a small number of adult males.",
+      "category": "Animal Groups",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which animal sleeps the most hours per day?",
+      "options": [
+        "Sloth",
+        "Koala",
+        "Brown Bat",
+        "Giant Armadillo"
+      ],
+      "correctIndex": 2,
+      "explanation": "Brown Bats sleep up to 20 hours a day, which is the most among mammals. They need this rest to conserve energy.",
+      "category": "Animal Sleep",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the fastest land animal?",
+      "options": [
+        "Cheetah",
+        "Pronghorn Antelope",
+        "Springbok",
+        "Brown Hare"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Cheetah can reach speeds of up to 70 mph (113 km/h), making it the fastest land animal.",
+      "category": "Animal Speed",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Which of these animals does NOT hibernate?",
+      "options": [
+        "Bears",
+        "Skunks",
+        "Elephants",
+        "Groundhogs"
+      ],
+      "correctIndex": 2,
+      "explanation": "Elephants do not hibernate. They remain active year-round and migrate to find food and water as needed.",
+      "category": "Animal Behavior",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the main diet of a Giraffe?",
+      "options": [
+        "Carnivore (meat)",
+        "Herbivore (plants)",
+        "Omnivore (both)",
+        "Insectivore (insects)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Giraffes are herbivores, primarily eating leaves from tall trees, especially acacia trees.",
+      "category": "Animal Diets",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Where would you naturally find a Giraffe in the wild?",
+      "options": [
+        "Africa",
+        "Asia",
+        "South America",
+        "Australia"
+      ],
+      "correctIndex": 0,
+      "explanation": "Giraffes are native to Africa, where they roam the savannas looking for tall trees to feed on.",
+      "category": "Animal Habitats",
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the main diet of a Penguin?",
+      "options": [
+        "Carnivore (meat)",
+        "Herbivore (plants)",
+        "Omnivore (both)",
+        "Insectivore (insects)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Penguins are carnivores, primarily eating fish, squid, and other marine creatures.",
+      "category": "Animal Diets",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Where would you naturally find a Penguin in the wild?",
+      "options": [
+        "Africa",
+        "Asia",
+        "South America",
+        "Australia"
+      ],
+      "correctIndex": 3,
+      "explanation": "Penguins are native to Antarctica and the Southern Hemisphere, where they huddle together for warmth and dive for food.",
+      "category": "Animal Habitats",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the main diet of a Tiger?",
+      "options": [
+        "Carnivore (meat)",
+        "Herbivore (plants)",
+        "Omnivore (both)",
+        "Insectivore (insects)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tigers are carnivores, primarily eating deer, wild boar, and other large mammals.",
+      "category": "Animal Diets",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Where would you naturally find a Tiger in the wild?",
+      "options": [
+        "Africa",
+        "Asia",
+        "South America",
+        "Australia"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tigers are native to Asia, where they hunt alone and mark their large territories.",
+      "category": "Animal Habitats",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the main diet of a Kangaroo?",
+      "options": [
+        "Carnivore (meat)",
+        "Herbivore (plants)",
+        "Omnivore (both)",
+        "Insectivore (insects)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kangaroos are herbivores, primarily eating grass, leaves, and other vegetation.",
+      "category": "Animal Diets",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Where would you naturally find a Kangaroo in the wild?",
+      "options": [
+        "Africa",
+        "Asia",
+        "South America",
+        "Australia"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kangaroos are native to Australia, where they hop around in groups called mobs.",
+      "category": "Animal Habitats",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the main diet of a Sloth?",
+      "options": [
+        "Carnivore (meat)",
+        "Herbivore (plants)",
+        "Omnivore (both)",
+        "Insectivore (insects)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sloths are herbivores, primarily eating leaves, buds, and tender shoots.",
+      "category": "Animal Diets",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Where would you naturally find a Sloth in the wild?",
+      "options": [
+        "Africa",
+        "Asia",
+        "South America",
+        "Australia"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sloths are native to South America, where they move very slowly and sleep up to 20 hours a day.",
+      "category": "Animal Habitats",
+      "difficulty": "easy"
+    },
+    {
+      "question": "How many species of bird exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 10,500 species of bird in the world today.",
+      "category": "Animal Species",
+      "difficulty": "easy"
+    },
+    {
+      "question": "How many species of mammal exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 6,400 species of mammal in the world today.",
+      "category": "Animal Species",
+      "difficulty": "hard"
+    },
+    {
+      "question": "How many species of reptile exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 10,000 species of reptile in the world today.",
+      "category": "Animal Species",
+      "difficulty": "easy"
+    },
+    {
+      "question": "How many species of amphibian exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 7,300 species of amphibian in the world today.",
+      "category": "Animal Species",
+      "difficulty": "hard"
+    },
+    {
+      "question": "How many species of fish exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 34,000 species of fish in the world today.",
+      "category": "Animal Species",
+      "difficulty": "easy"
+    },
+    {
+      "question": "How many species of insect exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 1,000,000 species of insect in the world today.",
+      "category": "Animal Species",
+      "difficulty": "medium"
+    },
+    {
+      "question": "How many species of spider exist today?",
+      "options": [
+        "Less than 50",
+        "50-200",
+        "200-500",
+        "More than 500"
+      ],
+      "correctIndex": 3,
+      "explanation": "There are approximately 45,000 species of spider in the world today.",
+      "category": "Animal Species",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is special about a cat's tongue?",
+      "options": [
+        "It's completely smooth",
+        "It has tiny hooks called papillae",
+        "It can taste sweetness",
+        "It changes color with mood"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's tongue has tiny backward-facing hooks called papillae that help them groom and strip meat from bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "medium"
+    },
+    {
+      "question": "According to feline biology, what is special about a cat's tongue?",
+      "options": [
+        "It's completely smooth",
+        "It has tiny hooks called papillae",
+        "It can taste sweetness",
+        "It changes color with mood"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's tongue has tiny backward-facing hooks called papillae that help them groom and strip meat from bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "medium"
+    },
+    {
+      "question": "In terms of cat physiology, what is special about a cat's tongue?",
+      "options": [
+        "It's completely smooth",
+        "It has tiny hooks called papillae",
+        "It can taste sweetness",
+        "It changes color with mood"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's tongue has tiny backward-facing hooks called papillae that help them groom and strip meat from bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Cat owners often wonder: what is special about a cat's tongue?",
+      "options": [
+        "It's completely smooth",
+        "It has tiny hooks called papillae",
+        "It can taste sweetness",
+        "It changes color with mood"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's tongue has tiny backward-facing hooks called papillae that help them groom and strip meat from bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "medium"
+    },
+    {
+      "question": "How many bones does the average adult cat have?",
+      "options": [
+        "180",
+        "230",
+        "270",
+        "320"
+      ],
+      "correctIndex": 1,
+      "explanation": "The average adult cat has 230 bones, which is more than humans who have 206 bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "According to feline biology, how many bones does the average adult cat have?",
+      "options": [
+        "180",
+        "230",
+        "270",
+        "320"
+      ],
+      "correctIndex": 1,
+      "explanation": "The average adult cat has 230 bones, which is more than humans who have 206 bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In terms of cat physiology, how many bones does the average adult cat have?",
+      "options": [
+        "180",
+        "230",
+        "270",
+        "320"
+      ],
+      "correctIndex": 1,
+      "explanation": "The average adult cat has 230 bones, which is more than humans who have 206 bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Cat owners often wonder: how many bones does the average adult cat have?",
+      "options": [
+        "180",
+        "230",
+        "270",
+        "320"
+      ],
+      "correctIndex": 1,
+      "explanation": "The average adult cat has 230 bones, which is more than humans who have 206 bones.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is a cat's normal body temperature?",
+      "options": [
+        "97-99°F (36.1-37.2°C)",
+        "100-102.5°F (37.7-39.2°C)",
+        "103-105°F (39.4-40.6°C)",
+        "106-108°F (41.1-42.2°C)"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's normal body temperature ranges from 100-102.5°F (37.7-39.2°C), which is higher than humans.",
+      "category": "Cat Physiology",
+      "difficulty": "medium"
+    },
+    {
+      "question": "According to feline biology, what is a cat's normal body temperature?",
+      "options": [
+        "97-99°F (36.1-37.2°C)",
+        "100-102.5°F (37.7-39.2°C)",
+        "103-105°F (39.4-40.6°C)",
+        "106-108°F (41.1-42.2°C)"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's normal body temperature ranges from 100-102.5°F (37.7-39.2°C), which is higher than humans.",
+      "category": "Cat Physiology",
+      "difficulty": "medium"
+    },
+    {
+      "question": "In terms of cat physiology, what is a cat's normal body temperature?",
+      "options": [
+        "97-99°F (36.1-37.2°C)",
+        "100-102.5°F (37.7-39.2°C)",
+        "103-105°F (39.4-40.6°C)",
+        "106-108°F (41.1-42.2°C)"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's normal body temperature ranges from 100-102.5°F (37.7-39.2°C), which is higher than humans.",
+      "category": "Cat Physiology",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Cat owners often wonder: what is a cat's normal body temperature?",
+      "options": [
+        "97-99°F (36.1-37.2°C)",
+        "100-102.5°F (37.7-39.2°C)",
+        "103-105°F (39.4-40.6°C)",
+        "106-108°F (41.1-42.2°C)"
+      ],
+      "correctIndex": 1,
+      "explanation": "A cat's normal body temperature ranges from 100-102.5°F (37.7-39.2°C), which is higher than humans.",
+      "category": "Cat Physiology",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is unique about a cat's collar bone (clavicle)?",
+      "options": [
+        "Cats don't have collar bones",
+        "They're attached to the spine",
+        "They're not attached to other bones",
+        "They're fused to the skull"
+      ],
+      "correctIndex": 2,
+      "explanation": "A cat's collar bones (clavicles) are not attached to other bones, which contributes to their flexibility and ability to fit through tight spaces.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "According to feline biology, what is unique about a cat's collar bone (clavicle)?",
+      "options": [
+        "Cats don't have collar bones",
+        "They're attached to the spine",
+        "They're not attached to other bones",
+        "They're fused to the skull"
+      ],
+      "correctIndex": 2,
+      "explanation": "A cat's collar bones (clavicles) are not attached to other bones, which contributes to their flexibility and ability to fit through tight spaces.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In terms of cat physiology, what is unique about a cat's collar bone (clavicle)?",
+      "options": [
+        "Cats don't have collar bones",
+        "They're attached to the spine",
+        "They're not attached to other bones",
+        "They're fused to the skull"
+      ],
+      "correctIndex": 2,
+      "explanation": "A cat's collar bones (clavicles) are not attached to other bones, which contributes to their flexibility and ability to fit through tight spaces.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Cat owners often wonder: what is unique about a cat's collar bone (clavicle)?",
+      "options": [
+        "Cats don't have collar bones",
+        "They're attached to the spine",
+        "They're not attached to other bones",
+        "They're fused to the skull"
+      ],
+      "correctIndex": 2,
+      "explanation": "A cat's collar bones (clavicles) are not attached to other bones, which contributes to their flexibility and ability to fit through tight spaces.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Why do cats have whiskers?",
+      "options": [
+        "For balance only",
+        "To sense if they can fit through spaces",
+        "For attracting mates",
+        "They have no function"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cat whiskers help them determine if they can fit through openings. The whiskers are generally as wide as the cat's body.",
+      "category": "Cat Anatomy",
+      "difficulty": "easy"
+    },
+    {
+      "question": "According to feline biology, why do cats have whiskers?",
+      "options": [
+        "For balance only",
+        "To sense if they can fit through spaces",
+        "For attracting mates",
+        "They have no function"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cat whiskers help them determine if they can fit through openings. The whiskers are generally as wide as the cat's body.",
+      "category": "Cat Anatomy",
+      "difficulty": "easy"
+    },
+    {
+      "question": "In terms of cat physiology, why do cats have whiskers?",
+      "options": [
+        "For balance only",
+        "To sense if they can fit through spaces",
+        "For attracting mates",
+        "They have no function"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cat whiskers help them determine if they can fit through openings. The whiskers are generally as wide as the cat's body.",
+      "category": "Cat Anatomy",
+      "difficulty": "easy"
+    },
+    {
+      "question": "Cat owners often wonder: why do cats have whiskers?",
+      "options": [
+        "For balance only",
+        "To sense if they can fit through spaces",
+        "For attracting mates",
+        "They have no function"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cat whiskers help them determine if they can fit through openings. The whiskers are generally as wide as the cat's body.",
+      "category": "Cat Anatomy",
+      "difficulty": "easy"
+    },
+    {
+      "question": "In which ancient civilization were cats first domesticated?",
+      "options": [
+        "Ancient Greece",
+        "Ancient Rome",
+        "Ancient Egypt",
+        "Ancient China"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cats were first domesticated in Ancient Egypt around 4,000 years ago, where they were revered and even worshipped.",
+      "category": "Cat History",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which goddess from Ancient Egypt had a cat's head?",
+      "options": [
+        "Isis",
+        "Bastet",
+        "Hathor",
+        "Sekhmet"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bastet was the Ancient Egyptian goddess of home, fertility, and protection, often depicted with a cat's head.",
+      "category": "Cat History",
+      "difficulty": "medium"
+    },
+    {
+      "question": "In the Middle Ages, what were cats falsely associated with?",
+      "options": [
+        "Healing powers",
+        "Witchcraft",
+        "Royalty",
+        "Good harvests"
+      ],
+      "correctIndex": 1,
+      "explanation": "During the Middle Ages, cats were often associated with witchcraft and the devil, leading to widespread persecution.",
+      "category": "Cat History",
+      "difficulty": "easy"
+    },
+    {
+      "question": "When was the first cat show held?",
+      "options": [
+        "1871 in London",
+        "1901 in New York",
+        "1925 in Paris",
+        "1950 in Tokyo"
+      ],
+      "correctIndex": 0,
+      "explanation": "The first cat show was held at the Crystal Palace in London in 1871, organized by Harrison Weir.",
+      "category": "Cat History",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What was the name of the cat that reportedly sailed with Christopher Columbus?",
+      "options": [
+        "Sailor",
+        "Navigator",
+        "Guacamole",
+        "There was no cat"
+      ],
+      "correctIndex": 3,
+      "explanation": "Contrary to some myths, there is no historical record of a specific cat sailing with Christopher Columbus.",
+      "category": "Cat History",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which is NOT true about cats' vision?",
+      "options": [
+        "They see better in dim light than humans",
+        "They can see colors, but less vibrantly than humans",
+        "They have better peripheral vision than humans",
+        "They can see clearly at distances better than humans"
+      ],
+      "correctIndex": 3,
+      "explanation": "Cats actually have poor distance vision compared to humans. They're nearsighted and see best at distances of about 20 feet or less.",
+      "category": "Cat Facts",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What percentage of cats are affected by catnip?",
+      "options": [
+        "10-20%",
+        "30-50%",
+        "60-70%",
+        "80-90%"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only about 30-50% of cats are affected by catnip. The response is hereditary and kittens under 8 weeks old aren't affected at all.",
+      "category": "Cat Facts",
+      "difficulty": "medium"
+    },
+    {
+      "question": "How many muscles do cats use to control their ears?",
+      "options": [
+        "6",
+        "12",
+        "20",
+        "32"
+      ],
+      "correctIndex": 3,
+      "explanation": "Cats have 32 muscles in each ear, allowing them to move their ears independently and rotate them 180 degrees.",
+      "category": "Cat Anatomy",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What color can cats NOT see well?",
+      "options": [
+        "Blue",
+        "Green",
+        "Red",
+        "Yellow"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cats cannot see the color red well. They see primarily in blue and green, and are not fully colorblind as sometimes believed.",
+      "category": "Cat Facts",
+      "difficulty": "medium"
+    },
+    {
+      "question": "What is the normal heart rate for a resting adult cat?",
+      "options": [
+        "60-100 beats per minute",
+        "120-140 beats per minute",
+        "150-200 beats per minute",
+        "220-240 beats per minute"
+      ],
+      "correctIndex": 2,
+      "explanation": "A cat's normal heart rate is typically 150-200 beats per minute when resting, which is much faster than a human's.",
+      "category": "Cat Physiology",
+      "difficulty": "hard"
+    }
+  ]
+}

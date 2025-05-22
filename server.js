@@ -97,10 +97,10 @@ async function setupInitialDatabase() {
       
       // If we have no questions, populate with initial questions
       if (questionCount < 10) {
-      console.log("Database is empty, adding initial questions");
-      
-      // Initial questions to add to database
-      const initialQuestions = [
+        console.log("Database is empty, adding initial questions");
+        
+        // Initial questions to add to database
+        const initialQuestions = [
         // Cat questions - easy
         {
           question: "What is the most common eye color for cats?",
