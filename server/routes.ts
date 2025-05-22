@@ -419,23 +419,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create a unique game ID
       const gameId = randomUUID();
       
-      // Store game state
+      // Ensure no duplicate questions by filtering based on question text
+      const seenQuestions = new Set();
+      const uniqueQuestions = [];
+      
+      for (const q of questions) {
+        // Get cleaned question text and use it as identifier
+        const questionKey = cleanQuestionText(q.question).toLowerCase();
+        
+        // Only include if we haven't seen this question yet
+        if (!seenQuestions.has(questionKey)) {
+          seenQuestions.add(questionKey);
+          uniqueQuestions.push(q);
+        }
+      }
+      
+      // Use unique questions (or fallback to original list if something went wrong)
+      const dedupedQuestions = uniqueQuestions.length > 0 ? uniqueQuestions : questions;
+      
+      // Store game state with unique questions
       const gameState = {
         score: 0,
         currentQuestionIndex: 0,
-        totalQuestions: questions.length,
+        totalQuestions: dedupedQuestions.length,
         difficulty: validatedBody.difficulty,
         category: validatedBody.category,
-        questions,
+        questions: dedupedQuestions,
         gameId,
       };
       
       activeGames.set(gameId, gameState);
       
+      // Randomize option order for each question
+      const randomizedQuestions = dedupedQuestions.map(question => {
+        // Create pairs of [option, isCorrect]
+        const optionPairs = question.options.map((option, index) => ({
+          option,
+          isCorrect: index === question.correctIndex
+        }));
+        
+        // Shuffle the options
+        const shuffledPairs = shuffleArray(optionPairs);
+        
+        // Find the new index of the correct answer
+        const newCorrectIndex = shuffledPairs.findIndex(pair => pair.isCorrect);
+        
+        // Return question with shuffled options
+        return {
+          ...question,
+          options: shuffledPairs.map(pair => pair.option),
+          correctIndex: newCorrectIndex
+        };
+      });
+      
       // Return the game ID and questions to the client
       res.json({
         gameId,
-        questions,
+        questions: randomizedQuestions,
       });
     } catch (error) {
       console.error("Error starting trivia game:", error);
