@@ -106,10 +106,21 @@ export function useTriviaGame() {
 
   // Load the current question
   const loadCurrentQuestion = useCallback((index: number, questions: TriviaQuestion[]) => {
+    // Make sure we normalize the correctIndex property
+    const question = questions[index];
+    const normalizedQuestion = {
+      ...question,
+      // Make sure correctIndex is always properly set
+      correctIndex: typeof question.correctIndex === 'number' ? 
+                    question.correctIndex : 
+                    typeof question.correct_index === 'number' ?
+                    question.correct_index : 0,
+    };
+    
     setGameState((prev) => ({
       ...prev,
       loading: false,
-      currentQuestion: questions[index],
+      currentQuestion: normalizedQuestion,
       hasAnswered: false,
       selectedAnswer: null,
     }));
