@@ -195,9 +195,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let dbQuestions = [];
         
         if (validatedBody.category === "cats") {
-          // For cats category, get questions where category contains 'cat' or 'Cat'
-          // Get a random sample of questions using SQL RANDOM() function
-          dbQuestions = await db.select()
+          // For cats category, get a truly varied set of questions using our bucketing system
+          // This ensures we get questions from different categories and styles
+          const catQuestions = await db.select()
             .from(triviaQuestions)
             .where(
               and(
@@ -205,22 +205,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 sql`lower(${triviaQuestions.category}) like '%cat%'`
               )
             )
-            .orderBy(sql`RANDOM()`)
-            .limit(validatedBody.questionsCount * 3);
+            .orderBy(sql`RANDOM() * ${triviaQuestions.random_bucket}`)
+            .limit(validatedBody.questionsCount * 10);
             
-          // Additional shuffle in JavaScript for even more randomness
-          dbQuestions = shuffleArray(dbQuestions)
+          // Make sure we have a good variety by getting different types of questions
+          const uniqueCategories = new Set();
+          const variedQuestions = [];
+          
+          // First pass: add questions with unique categories
+          for (const question of catQuestions) {
+            if (!uniqueCategories.has(question.category) && variedQuestions.length < validatedBody.questionsCount) {
+              uniqueCategories.add(question.category);
+              variedQuestions.push(question);
+            }
+          }
+          
+          // Second pass: fill remaining slots with other questions
+          for (const question of catQuestions) {
+            if (variedQuestions.length < validatedBody.questionsCount && 
+                !variedQuestions.includes(question)) {
+              variedQuestions.push(question);
+            }
+          }
+          
+          // Final shuffle for maximum randomness
+          dbQuestions = shuffleArray(variedQuestions)
             .slice(0, validatedBody.questionsCount);
         } else {
-          // For mixed category, get a truly random sample of all animal questions
-          dbQuestions = await db.select()
+          // For mixed category, get a truly varied set of questions
+          const allAnimalQuestions = await db.select()
             .from(triviaQuestions)
             .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
-            .orderBy(sql`RANDOM()`)
-            .limit(validatedBody.questionsCount * 5);
+            .orderBy(sql`RANDOM() * ${triviaQuestions.random_bucket}`)
+            .limit(validatedBody.questionsCount * 10);
             
-          // Additional shuffle in JavaScript for maximum randomness
-          dbQuestions = shuffleArray(dbQuestions)
+          // Ensure we get a variety of animal types
+          const uniqueCategories = new Set();
+          const variedQuestions = [];
+          
+          // First pass: add questions with unique categories
+          for (const question of allAnimalQuestions) {
+            if (!uniqueCategories.has(question.category) && variedQuestions.length < validatedBody.questionsCount) {
+              uniqueCategories.add(question.category);
+              variedQuestions.push(question);
+            }
+          }
+          
+          // Second pass: fill remaining slots with other questions
+          for (const question of allAnimalQuestions) {
+            if (variedQuestions.length < validatedBody.questionsCount && 
+                !variedQuestions.includes(question)) {
+              variedQuestions.push(question);
+            }
+          }
+          
+          // Final shuffle for maximum randomness
+          dbQuestions = shuffleArray(variedQuestions)
             .slice(0, validatedBody.questionsCount);
         }
         
