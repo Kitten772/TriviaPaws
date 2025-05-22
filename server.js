@@ -30,8 +30,73 @@ async function setupInitialDatabase() {
     
     console.log(`Database contains ${questionCount} trivia questions`);
     
-    // If we have no questions, populate with initial questions
-    if (questionCount < 10) {
+    // If we have too few questions, populate with more questions
+    if (questionCount < 1000) {
+      console.log("Database has fewer than 1000 questions, attempting to restore from backup");
+      
+      try {
+        // Try to load the backup file
+        const backupPath = path.join(__dirname, 'backups/default-trivia-backup.json');
+        
+        if (fs.existsSync(backupPath)) {
+          console.log("Found backup file, restoring questions");
+          const backupData = JSON.parse(fs.readFileSync(backupPath, 'utf8'));
+          
+          if (backupData.questions && backupData.questions.length > 0) {
+            console.log(`Found ${backupData.questions.length} questions in backup file`);
+            
+            // Import batch by batch to avoid memory issues
+            const batchSize = 100;
+            let imported = 0;
+            
+            for (let i = 0; i < backupData.questions.length; i += batchSize) {
+              const batch = backupData.questions.slice(i, i + batchSize);
+              
+              // Create a batch insert query
+              const valueStrings = batch.map((_, index) => 
+                `($${index * 6 + 1}, $${index * 6 + 2}, $${index * 6 + 3}, $${index * 6 + 4}, $${index * 6 + 5}, $${index * 6 + 6})`
+              );
+              
+              const query = `
+                INSERT INTO trivia_questions 
+                (question, options, correct_index, explanation, category, difficulty)
+                VALUES ${valueStrings.join(', ')}
+                ON CONFLICT (question) DO NOTHING
+              `;
+              
+              const values = batch.flatMap(q => [
+                q.question, 
+                Array.isArray(q.options) ? JSON.stringify(q.options) : JSON.stringify(q.options || []),
+                q.correct_index || q.correctIndex,
+                q.explanation,
+                q.category,
+                q.difficulty
+              ]);
+              
+              try {
+                await pool.query(query, values);
+                imported += batch.length;
+                console.log(`Imported ${imported}/${backupData.questions.length} questions`);
+              } catch (batchError) {
+                console.error(`Error importing batch ${i}-${i+batchSize}:`, batchError.message);
+              }
+            }
+            
+            console.log(`Imported ${imported} questions from backup file`);
+            return;
+          }
+        } else {
+          console.log("No backup file found at", backupPath);
+        }
+      } catch (backupError) {
+        console.error("Error restoring from backup:", backupError.message);
+      }
+      
+      // If we reach here, we need to add at least some basic questions
+      console.log("Adding initial set of questions");
+      
+      // If we have no questions, populate with initial questions
+      if (questionCount < 10) {
       console.log("Database is empty, adding initial questions");
       
       // Initial questions to add to database
