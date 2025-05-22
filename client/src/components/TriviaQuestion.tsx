@@ -87,9 +87,9 @@ export default function TriviaQuestion({ triviaGame }) {
                 onClick={() => selectAnswer(index)}
                 disabled={hasAnswered}
                 className={`option-btn p-4 bg-white border-2 border-gray-200 rounded-lg text-left transition-all duration-200 flex items-center hover:border-[#FF6B6B] focus:outline-none focus:border-[#FF6B6B] ${
-                  hasAnswered && index === currentQuestion.correctIndex 
+                  hasAnswered && index === (currentQuestion.correctIndex !== undefined ? currentQuestion.correctIndex : currentQuestion.correct_index)
                     ? 'correct-answer' 
-                    : hasAnswered && selectedAnswer === index && index !== currentQuestion.correctIndex 
+                    : hasAnswered && selectedAnswer === index && index !== (currentQuestion.correctIndex !== undefined ? currentQuestion.correctIndex : currentQuestion.correct_index)
                       ? 'incorrect-answer' 
                       : ''
                 }`}

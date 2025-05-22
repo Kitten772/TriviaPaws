@@ -185,7 +185,13 @@ export function useTriviaGame() {
   const selectAnswer = (index: number) => {
     if (gameState.hasAnswered || !gameState.currentQuestion) return;
 
-    const isCorrect = index === gameState.currentQuestion.correctIndex;
+    // Fix: Check both possible correct answer property names
+    const correctIndex = 
+      gameState.currentQuestion.correctIndex !== undefined 
+        ? gameState.currentQuestion.correctIndex 
+        : gameState.currentQuestion.correct_index;
+    
+    const isCorrect = index === correctIndex;
     
     setGameState((prev) => ({
       ...prev,
