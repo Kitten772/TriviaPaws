@@ -22,6 +22,12 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
+// Function to clean up question text by removing numbering patterns
+function cleanQuestionText(question: string): string {
+  // Remove patterns like "Quiz #123:", "Question 456:", "Cat Trivia #7:" etc.
+  return question.replace(/^.*?(?:Quiz|Question|Q|Trivia)\s*#?\d+\s*:?\s*/i, '');
+}
+
 // Hardcoded questions in case the API key doesn't work
 const catTriviaQuestions = [
   {
@@ -213,7 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               )
             )
             .orderBy(sql`RANDOM()`)
-            .limit(questionCount * 10);
+            .limit(totalQuestions * 10);
             
           // Make sure we have a good variety by getting different types of questions
           const uniqueCategories = new Set();
@@ -226,7 +232,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
             
             if (!uniqueCategories.has(question.category) && 
-                variedQuestions.length < questionCount && 
+                variedQuestions.length < totalQuestions && 
                 !questionTexts.has(cleanedQuestion.toLowerCase())) {
               uniqueCategories.add(question.category);
               questionTexts.add(cleanedQuestion.toLowerCase());
@@ -244,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             // Clean up any question numbering
             const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
             
-            if (variedQuestions.length < questionCount && 
+            if (variedQuestions.length < totalQuestions && 
                 !questionTexts.has(cleanedQuestion.toLowerCase())) {
               questionTexts.add(cleanedQuestion.toLowerCase());
               
