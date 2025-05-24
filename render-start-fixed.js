@@ -498,37 +498,85 @@ const distPublicPath = path.join(__dirname, 'dist', 'public');
 const distPath = path.join(__dirname, 'dist');
 const clientDistPath = path.join(__dirname, 'client', 'dist');
 
-// Check which path exists and use it
-let staticPath = distPath;
-if (fs.existsSync(distPublicPath)) {
-  console.log("Using dist/public path for static files");
-  staticPath = distPublicPath;
-} else if (fs.existsSync(distPath)) {
-  console.log("Using dist path for static files");
-} else {
-  console.warn("Warning: Could not find dist directory, static files may not be served");
+// Check for Vite's output directory structure, which can vary
+const possiblePaths = [
+  distPublicPath,                        // /dist/public
+  distPath,                              // /dist
+  clientDistPath,                        // /client/dist
+  path.join(__dirname, 'public'),        // /public
+  path.join(distPath, 'assets'),         // /dist/assets
+  path.join(distPublicPath, 'assets'),   // /dist/public/assets
+  path.join(clientDistPath, 'assets')    // /client/dist/assets
+];
+
+// Log the directory structure for debugging
+console.log("Current directory:", __dirname);
+fs.readdirSync(__dirname).forEach(file => {
+  console.log(`- ${file} ${fs.existsSync(path.join(__dirname, file)) ? "(exists)" : ""}`);
+});
+
+// Check if /dist exists and log its contents
+if (fs.existsSync(distPath)) {
+  console.log("Contents of /dist:");
+  fs.readdirSync(distPath).forEach(file => {
+    console.log(`  - ${file}`);
+  });
 }
 
-// Serve static files
-app.use(express.static(staticPath));
-
-// For any other request, check both possible index.html locations
-app.get('*', (req, res) => {
-  const indexPathPublic = path.join(distPublicPath, 'index.html');
-  const indexPath = path.join(distPath, 'index.html');
-  
-  if (fs.existsSync(indexPathPublic)) {
-    res.sendFile(indexPathPublic);
-  } else if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    // If we can't find the index.html, respond with an API message
-    res.json({ 
-      message: "TriviaPaws API is running", 
-      error: "Could not find frontend files",
-      paths_checked: [indexPathPublic, indexPath]
-    });
+// Find the first path that exists
+let staticPath = null;
+for (const p of possiblePaths) {
+  if (fs.existsSync(p)) {
+    staticPath = p;
+    console.log(`Found static files at: ${p}`);
+    break;
   }
+}
+
+if (!staticPath) {
+  console.warn("Warning: Could not find any static file directories");
+  // Default to dist even if it doesn't exist
+  staticPath = distPath;
+}
+
+// Serve static files from all possible locations
+possiblePaths.forEach(p => {
+  if (fs.existsSync(p)) {
+    console.log(`Serving static files from: ${p}`);
+    app.use(express.static(p));
+  }
+});
+
+// List of possible index.html locations
+const possibleIndexPaths = [
+  path.join(distPublicPath, 'index.html'),
+  path.join(distPath, 'index.html'),
+  path.join(clientDistPath, 'index.html'),
+  path.join(__dirname, 'public', 'index.html')
+];
+
+// For any other request, try to find index.html
+app.get('*', (req, res) => {
+  // First check if this is an API route
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: "API endpoint not found" });
+  }
+  
+  // Try to find and serve index.html
+  for (const indexPath of possibleIndexPaths) {
+    if (fs.existsSync(indexPath)) {
+      console.log(`Serving index.html from: ${indexPath}`);
+      return res.sendFile(indexPath);
+    }
+  }
+  
+  // If we can't find the index.html, respond with an API message
+  console.log("Could not find index.html in any location");
+  res.json({ 
+    message: "TriviaPaws API is running", 
+    error: "Could not find frontend files",
+    paths_checked: possibleIndexPaths
+  });
 });
 
 // Start the server
