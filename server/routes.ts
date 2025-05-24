@@ -509,21 +509,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const correctAnswer = options[correctIndex];
         const shuffledOptions = [...options];
         
-        // Force the correct answer to be in a truly random position
-        // First remove the correct answer from our working copy
-        const withoutCorrect = options.filter(opt => opt !== correctAnswer);
+        // Shuffle the options array completely
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
         
-        // Choose a truly random position for the correct answer
-        const newCorrectIndex = Math.floor(Math.random() * 4); // Random position 0-3
+        // Find where the correct answer ended up after shuffling
+        let newCorrectIndex = shuffledOptions.findIndex(opt => opt === correctAnswer);
         
-        // Build new shuffled array with correct answer in the random position
-        shuffledOptions[0] = withoutCorrect[0] || "Option A";
-        shuffledOptions[1] = withoutCorrect[1] || "Option B";
-        shuffledOptions[2] = withoutCorrect[2] || "Option C";
-        shuffledOptions[3] = withoutCorrect[3] || "Option D";
-        
-        // Insert correct answer at the random position
-        shuffledOptions[newCorrectIndex] = correctAnswer;
+        // If for some reason findIndex returns -1, use a random position
+        if (newCorrectIndex === -1) {
+          const fallbackIndex = Math.floor(Math.random() * 4);
+          shuffledOptions[fallbackIndex] = correctAnswer;
+          newCorrectIndex = fallbackIndex;
+        }
         
         // No debugging logs in production
         
