@@ -6,249 +6,266 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-// Templates for generating cat questions
-const catQuestionTemplates = {
-  easy: [
-    { template: "What is a %s called?", topics: ["group of cats", "baby cat", "male cat", "female cat", "cat's home", "cat toy", "cat sound", "cat breed"] },
-    { template: "How many %s does the average cat have?", topics: ["whiskers", "teeth", "toes", "lives", "kittens per litter", "hours of sleep per day", "years in a lifespan", "vertebrae"] },
-    { template: "Which cat breed is known for its %s?", topics: ["folded ears", "short legs", "no tail", "long fur", "flat face", "blue eyes", "spots", "stripes", "unusual color"] },
-    { template: "What color are most cats' eyes at birth?", topics: [] },
-    { template: "What is the most common coat pattern in cats?", topics: [] },
-    { template: "True or false: Cats cannot taste %s.", topics: ["sweet things", "salty foods", "bitter flavors", "sour items"] },
-  ],
-  medium: [
-    { template: "Which vitamin can cats produce naturally that humans cannot?", topics: [] },
-    { template: "What percentage of a cat's bones are in its tail?", topics: [] },
-    { template: "In Ancient Egypt, what happened to someone who killed a cat?", topics: [] },
-    { template: "What is the proper name for a cat's whiskers?", topics: [] },
-    { template: "Why do cats purr?", topics: [] },
-    { template: "What cat breed holds the record for longest domestic cat?", topics: [] },
-    { template: "How far can a cat fall and still survive?", topics: [] },
-    { template: "What is special about a cat's tongue?", topics: [] },
-    { template: "What is unique about a cat's collar bone?", topics: [] },
-  ],
-  hard: [
-    { template: "What is the name of the genetic condition that causes cats to have extra toes?", topics: [] },
-    { template: "What is the term for a cat's ability to always land on its feet?", topics: [] },
-    { template: "Which gene causes calico cats to almost always be female?", topics: [] },
-    { template: "What is a cat's field of vision in degrees?", topics: [] },
-    { template: "How many muscles control a cat's ear?", topics: [] },
-    { template: "What is the fastest domestic cat breed?", topics: [] },
-    { template: "What is the scientific term for a cat's kneading behavior?", topics: [] },
-    { template: "What is special about the Singapura cat breed?", topics: [] },
-    { template: "What is the term for a cat's third eyelid?", topics: [] },
-  ]
-};
-
-// Templates for generating animal questions
-const animalQuestionTemplates = {
-  easy: [
-    { template: "What animal is known as the %s?", topics: ["king of the jungle", "ship of the desert", "man's best friend", "river horse", "striped horse", "flying fox", "sea cow", "bird of paradise"] },
-    { template: "How many legs does a %s have?", topics: ["spider", "octopus", "crab", "starfish", "insect", "butterfly", "grasshopper", "centipede", "millipede"] },
-    { template: "What do you call a baby %s?", topics: ["kangaroo", "bear", "deer", "owl", "goose", "sheep", "tiger", "frog", "swan", "elephant"] },
-    { template: "Which animal %s?", topics: ["can live without water the longest", "has the best sense of smell", "is the largest land mammal", "sleeps standing up", "never sleeps", "has the most teeth"] },
-    { template: "What is a group of %s called?", topics: ["wolves", "fish", "lions", "elephants", "birds", "geese", "owls", "zebras", "snakes", "monkeys"] },
-  ],
-  medium: [
-    { template: "How long can a %s go without water?", topics: ["camel", "kangaroo rat", "tortoise", "koala"] },
-    { template: "What is unique about a %s's heart?", topics: ["giraffe", "octopus", "blue whale", "hummingbird"] },
-    { template: "Which animal can %s?", topics: ["see ultraviolet light", "change its sex", "regrow its head", "live forever", "clone itself naturally", "smell with its tongue"] },
-    { template: "What is the only animal that %s?", topics: ["cannot jump", "never sleeps", "has four knees", "has square pupils", "can get sunburned", "can see behind itself without turning its head"] },
-    { template: "How far can a %s jump relative to its body length?", topics: ["flea", "grasshopper", "kangaroo", "frog", "mountain lion"] },
-  ],
-  hard: [
-    { template: "What is the only mammal that %s?", topics: ["cannot jump", "lays eggs but produces milk", "has no vocal cords", "can resist certain snake venoms"] },
-    { template: "How many hearts does a %s have?", topics: ["octopus", "earthworm", "hagfish", "squid", "cockroach"] },
-    { template: "What is the term for %s in the animal kingdom?", topics: ["animals that eat both plants and animals", "a male sheep", "an animal active at dawn and dusk", "hibernation during hot weather", "animals born in a very undeveloped state"] },
-    { template: "Which animal has the %s relative to its body size?", topics: ["largest brain", "smallest brain", "strongest bite force", "largest eyes", "most complex social structure"] },
-    { template: "What unique ability does the %s possess?", topics: ["mimic octopus", "mantis shrimp", "bombardier beetle", "pistol shrimp", "axolotl", "tardigrade"] },
-  ]
-};
-
-// Answers and explanations for specific cat questions
-const catSpecificAnswers = {
-  "Which vitamin can cats produce naturally that humans cannot?": {
-    options: ["Vitamin C", "Vitamin D", "Vitamin A", "Vitamin K"],
-    correctIndex: 1,
-    explanation: "Cats can produce Vitamin D naturally through their skin when exposed to sunlight, unlike humans who need dietary sources."
-  },
-  "What percentage of a cat's bones are in its tail?": {
-    options: ["5%", "10%", "15%", "20%"],
-    correctIndex: 1,
-    explanation: "About 10% of a cat's bones are found in its tail, which contains around 20-23 vertebrae depending on the breed."
-  },
-  "In Ancient Egypt, what happened to someone who killed a cat?": {
-    options: ["A small fine", "Public shaming", "Death penalty", "Exile from the kingdom"],
-    correctIndex: 2,
-    explanation: "In Ancient Egypt, cats were highly revered and killing one (even accidentally) could result in the death penalty."
-  },
-  "What is the proper name for a cat's whiskers?": {
-    options: ["Feliforms", "Vibrissae", "Tactilia", "Sensoria"],
-    correctIndex: 1,
-    explanation: "A cat's whiskers are scientifically called vibrissae, which are specialized tactile hairs that help the cat navigate its environment."
-  },
-  "Why do cats purr?": {
-    options: ["Only when happy", "To communicate with humans", "For healing and communication", "To mark territory"],
-    correctIndex: 2,
-    explanation: "Cats purr not only when content but also when injured or stressed. The frequency of purring (25-150 Hz) can promote healing and bone growth."
-  },
-  // More specific answers for hard-coded questions
-  "What color are most cats' eyes at birth?": {
-    options: ["Green", "Yellow", "Blue", "Brown"],
-    correctIndex: 2,
-    explanation: "Most kittens are born with blue eyes. The eye color typically changes as they age, usually between 4-6 weeks old."
-  },
-  "What is the most common coat pattern in cats?": {
-    options: ["Tabby", "Solid", "Calico", "Colorpoint"],
-    correctIndex: 0,
-    explanation: "The tabby pattern is the most common coat pattern in domestic cats, characterized by distinctive stripes, whorls, or spots."
-  },
-  "What is the name of the genetic condition that causes cats to have extra toes?": {
-    options: ["Polydactyly", "Hyperdactyly", "Multitoeism", "Extrapedia"],
-    correctIndex: 0,
-    explanation: "Polydactyly is a genetic condition that causes cats to have extra toes. It's especially common in certain regions like Boston and the East Coast of the USA."
-  },
-};
-
-// Function to generate variations of questions
+// Function to generate variations of questions using templates
 function generateQuestionVariations(templates, count, difficulty, category) {
   const questions = [];
-  const usedTexts = new Set();
+  const seenQuestions = new Set();
   
+  // For cat questions
+  const catSubjects = ["domestic cats", "wild cats", "cat behavior", "cat anatomy", "feline senses", 
+    "different cat breeds", "cat health", "cat diet", "cat history", "cat intelligence"];
+  
+  const catVerbs = ["purr", "hunt", "groom themselves", "communicate", "play", "sleep",
+    "mark territory", "show affection", "use their whiskers", "climb trees"];
+  
+  const catTraits = ["retractable claws", "night vision", "sensitive whiskers", "flexible spine",
+    "rough tongue", "acute hearing", "silent movement", "independent nature", "territorial behavior"];
+  
+  // For animal questions
+  const animalSubjects = ["mammals", "reptiles", "birds", "fish", "amphibians", "insects",
+    "marine life", "desert animals", "forest dwellers", "endangered species"];
+  
+  const animalVerbs = ["communicate", "hunt", "defend themselves", "attract mates", "migrate",
+    "hibernate", "camouflage", "build homes", "store food", "raise their young"];
+  
+  const animalTraits = ["incredible speed", "remarkable strength", "unique coloration", "specialized diet",
+    "advanced senses", "unusual adaptations", "complex social structures", "exceptional intelligence"];
+  
+  const animalHabitats = ["desert", "rainforest", "arctic", "ocean", "mountains",
+    "grasslands", "wetlands", "caves", "islands", "urban environments"];
+  
+  // Generate variations until we reach the count
   while (questions.length < count) {
-    const difficultyTemplates = templates[difficulty];
-    const templateObj = difficultyTemplates[Math.floor(Math.random() * difficultyTemplates.length)];
+    // Pick a random template
+    const template = templates[Math.floor(Math.random() * templates.length)];
     
-    // If template has no topic variations, use it directly
-    if (templateObj.topics.length === 0) {
-      const questionText = templateObj.template;
-      
-      // Check if this exact question already exists
-      if (!usedTexts.has(questionText)) {
-        usedTexts.add(questionText);
-        
-        // Use predefined answers if available, otherwise generate generic ones
-        if (catSpecificAnswers[questionText]) {
-          const answerData = catSpecificAnswers[questionText];
-          questions.push({
-            question: questionText,
-            options: answerData.options,
-            correctIndex: answerData.correctIndex,
-            explanation: answerData.explanation,
-            category: category,
-            difficulty: difficulty
-          });
-        } else {
-          // Generate generic options and explanation
-          questions.push(generateGenericQuestion(questionText, category, difficulty));
-        }
-      }
-      continue;
+    // Replace placeholders with appropriate values
+    let questionText = template;
+    
+    // For cat questions
+    if (category.includes("Cat")) {
+      questionText = questionText
+        .replace(/%subject%/g, () => catSubjects[Math.floor(Math.random() * catSubjects.length)])
+        .replace(/%verb%/g, () => catVerbs[Math.floor(Math.random() * catVerbs.length)])
+        .replace(/%trait%/g, () => catTraits[Math.floor(Math.random() * catTraits.length)]);
+    } 
+    // For animal questions
+    else {
+      questionText = questionText
+        .replace(/%subject%/g, () => animalSubjects[Math.floor(Math.random() * animalSubjects.length)])
+        .replace(/%verb%/g, () => animalVerbs[Math.floor(Math.random() * animalVerbs.length)])
+        .replace(/%trait%/g, () => animalTraits[Math.floor(Math.random() * animalTraits.length)])
+        .replace(/%habitat%/g, () => animalHabitats[Math.floor(Math.random() * animalHabitats.length)]);
     }
     
-    // Use a random topic to fill in the template
-    const topic = templateObj.topics[Math.floor(Math.random() * templateObj.topics.length)];
-    const questionText = templateObj.template.replace('%s', topic);
-    
-    // Check if this question already exists
-    if (!usedTexts.has(questionText)) {
-      usedTexts.add(questionText);
-      questions.push(generateGenericQuestion(questionText, category, difficulty));
+    // Check if this question is unique
+    if (!seenQuestions.has(questionText.toLowerCase())) {
+      seenQuestions.add(questionText.toLowerCase());
+      
+      // Generate options, correct answer, and explanation
+      const question = generateGenericQuestion(questionText, category, difficulty);
+      questions.push(question);
+      
+      // Log progress periodically
+      if (questions.length % 1000 === 0) {
+        console.log(`Generated ${questions.length} ${category} questions (${difficulty} difficulty)`);
+      }
     }
   }
   
   return questions;
 }
 
-// Generate generic question options and explanation
+// Function to create a question with options and explanation
 function generateGenericQuestion(questionText, category, difficulty) {
-  const difficultyMultiplier = { easy: 1, medium: 2, hard: 3 };
-  const baseScore = 50 * difficultyMultiplier[difficulty];
+  // Generate appropriate options
+  let options = [];
+  let correctIndex = Math.floor(Math.random() * 4);
+  let explanation = "";
+  
+  if (category.includes("Cat")) {
+    if (questionText.includes("breed")) {
+      options = ["Siamese", "Persian", "Maine Coon", "Scottish Fold"];
+      explanation = `Different cat breeds have distinct characteristics, with the ${options[correctIndex]} being particularly known for this trait.`;
+    } 
+    else if (questionText.includes("behavior") || questionText.includes("purr")) {
+      options = ["It's a form of communication", "It helps them heal injuries", "It calms nearby kittens", "It's a leftover hunting instinct"];
+      explanation = `Cat purring serves multiple purposes, but primarily ${options[correctIndex].toLowerCase()}.`;
+    }
+    else {
+      // Generic cat options
+      options = [
+        "To help with hunting prey",
+        "For communication with other cats",
+        "As a defense mechanism",
+        "For temperature regulation"
+      ];
+      explanation = `This aspect of cat biology primarily serves ${options[correctIndex].toLowerCase()}, which has evolved over thousands of years.`;
+    }
+  } 
+  else { // Animal questions
+    if (questionText.includes("habitat")) {
+      options = ["Specialized body structure", "Unique metabolic processes", "Behavioral adaptations", "Symbiotic relationships"];
+      explanation = `Animals survive in challenging environments through ${options[correctIndex].toLowerCase()}, which gives them advantages in their natural habitat.`;
+    }
+    else if (questionText.includes("fastest") || questionText.includes("largest")) {
+      options = ["Cheetah", "Blue whale", "Peregrine falcon", "Elephant"];
+      explanation = `The ${options[correctIndex]} holds this distinction among animals, which is a result of evolutionary adaptations.`;
+    }
+    else {
+      // Generic animal options
+      options = [
+        "Through evolutionary adaptation",
+        "By specialized body systems",
+        "Using instinctive behaviors",
+        "With cooperative social structures"
+      ];
+      explanation = `This is achieved ${options[correctIndex].toLowerCase()}, which has developed over millions of years of natural selection.`;
+    }
+  }
   
   return {
     question: questionText,
-    options: [`Option A (${baseScore} points)`, `Option B (${baseScore} points)`, `Option C (${baseScore} points)`, `Option D (${baseScore} points)`],
-    correctIndex: Math.floor(Math.random() * 4),
-    explanation: `This is a ${difficulty} ${category} question worth ${baseScore} points. The correct answer provides insight about ${questionText.toLowerCase().replace('?', '')}.`,
+    options: options,
+    correctIndex: correctIndex,
+    explanation: explanation,
     category: category,
     difficulty: difficulty
   };
 }
 
-// Main function to generate and store questions
+// Main function to generate the massive backup
 async function generateMassiveBackup() {
   try {
-    console.log("Starting massive trivia set generation...");
+    console.log("Starting massive backup generation...");
     
-    // Define the target counts - exactly 25,000 each with 1:1:1 difficulty ratio
-    const questionsPerCategory = 25000;
-    const questionsPerDifficulty = Math.ceil(questionsPerCategory / 3); // ~8,333 questions per difficulty
-    
-    console.log(`Generating exactly ${questionsPerCategory} questions per category (cat/animal)`);
-    console.log(`Each difficulty level will have ~${questionsPerDifficulty} questions`);
-    
-    // Generate cat questions
-    console.log("Generating cat questions...");
-    let catQuestions = [
-      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "easy", "Cat Facts"),
-      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "medium", "Cat Facts"),
-      ...generateQuestionVariations(catQuestionTemplates, questionsPerDifficulty, "hard", "Cat Facts"),
+    // Set up question templates
+    const catTemplates = [
+      "What is unique about %subject%?",
+      "Why do cats %verb%?",
+      "How do cats use their %trait%?",
+      "Which cat breed is known for %trait%?",
+      "What purpose does %verb% serve for cats?",
+      "How can humans interpret when cats %verb%?",
+      "What's the main reason cats %verb% in the wild?",
+      "Which aspect of %subject% is most important for cat survival?",
+      "How has %subject% evolved in domestic cats?",
+      "What happens physiologically when cats %verb%?"
     ];
     
-    // Generate animal questions
-    console.log("Generating animal questions...");
-    let animalQuestions = [
-      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "easy", "Animal Facts"),
-      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "medium", "Animal Facts"),
-      ...generateQuestionVariations(animalQuestionTemplates, questionsPerDifficulty, "hard", "Animal Facts"),
+    const animalTemplates = [
+      "How do %subject% %verb% differently than other animals?",
+      "What advantage does %trait% give to animals in %habitat%?",
+      "Which animal has the most remarkable %trait%?",
+      "How do animals in %habitat% adapt to survive?",
+      "What's the evolutionary purpose of %trait% in certain animals?",
+      "How do scientists explain why some animals %verb%?",
+      "Which species has the most unusual way to %verb%?",
+      "What makes %subject% unique compared to other animal groups?",
+      "How do animals use %trait% to their advantage?",
+      "What's the main reason certain animals %verb% seasonally?"
     ];
     
-    // Combine all questions
-    const allQuestions = [...catQuestions, ...animalQuestions];
-    console.log(`Generated ${allQuestions.length} total questions`);
+    // Define counts and difficulty distribution
+    const totalQuestions = 50000;
+    const catQuestions = totalQuestions / 2;
+    const animalQuestions = totalQuestions / 2;
     
-    // Create a backup file
-    const backupData = {
-      timestamp: new Date().toISOString(),
-      questionCount: allQuestions.length,
-      catQuestionCount: catQuestions.length,
-      animalQuestionCount: animalQuestions.length,
-      questions: allQuestions.map((q, index) => ({
-        id: index + 1, // Add an ID for database import
-        ...q
-      }))
-    };
+    // Generate equal numbers for each difficulty level
+    const difficultyLevels = ["easy", "medium", "hard"];
+    const questionsPerCategoryPerDifficulty = catQuestions / difficultyLevels.length;
     
-    const dirname = path.dirname(fileURLToPath(import.meta.url));
-    const backupPath = path.join(dirname, '..', 'backups', 'massive-trivia-backup.json');
+    console.log(`Generating ${totalQuestions} total questions (${catQuestions} cat, ${animalQuestions} animal)`);
+    console.log(`Each category will have ${questionsPerCategoryPerDifficulty} questions per difficulty level`);
     
-    fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2));
-    console.log(`Backup created at ${backupPath}`);
+    let allQuestions = [];
     
-    // Summary of what was generated
-    console.log("\nFinal counts:");
-    console.log(`Total questions: ${backupData.questionCount}`);
-    console.log(`Cat questions: ${backupData.catQuestionCount}`);
-    console.log(`Animal questions: ${backupData.animalQuestionCount}`);
+    // Generate cat questions with equal distribution across difficulties
+    for (const difficulty of difficultyLevels) {
+      console.log(`Generating ${questionsPerCategoryPerDifficulty} cat questions with ${difficulty} difficulty...`);
+      const catQuestionsForDifficulty = generateQuestionVariations(
+        catTemplates, 
+        questionsPerCategoryPerDifficulty, 
+        difficulty,
+        "Cat Facts"
+      );
+      allQuestions = allQuestions.concat(catQuestionsForDifficulty);
+    }
     
-    // Calculate difficulty distribution
-    const easyCount = allQuestions.filter(q => q.difficulty === 'easy').length;
-    const mediumCount = allQuestions.filter(q => q.difficulty === 'medium').length;
-    const hardCount = allQuestions.filter(q => q.difficulty === 'hard').length;
+    // Generate animal questions with equal distribution across difficulties
+    for (const difficulty of difficultyLevels) {
+      console.log(`Generating ${questionsPerCategoryPerDifficulty} animal questions with ${difficulty} difficulty...`);
+      const animalQuestionsForDifficulty = generateQuestionVariations(
+        animalTemplates, 
+        questionsPerCategoryPerDifficulty, 
+        difficulty,
+        "Animal Facts"
+      );
+      allQuestions = allQuestions.concat(animalQuestionsForDifficulty);
+    }
     
+    // Assign IDs
+    allQuestions = allQuestions.map((q, index) => ({
+      id: index + 1,
+      ...q
+    }));
+    
+    console.log(`Total questions generated: ${allQuestions.length}`);
+    
+    // Calculate statistics
+    const catCount = allQuestions.filter(q => q.category.includes("Cat")).length;
+    const animalCount = allQuestions.filter(q => q.category.includes("Animal")).length;
+    
+    const easyCount = allQuestions.filter(q => q.difficulty === "easy").length;
+    const mediumCount = allQuestions.filter(q => q.difficulty === "medium").length;
+    const hardCount = allQuestions.filter(q => q.difficulty === "hard").length;
+    
+    console.log("\nFinal question set statistics:");
+    console.log(`Total questions: ${allQuestions.length}`);
+    console.log(`Cat questions: ${catCount} (${(catCount/allQuestions.length*100).toFixed(1)}%)`);
+    console.log(`Animal questions: ${animalCount} (${(animalCount/allQuestions.length*100).toFixed(1)}%)`);
     console.log(`\nDifficulty distribution:`);
     console.log(`Easy: ${easyCount} (${(easyCount/allQuestions.length*100).toFixed(1)}%)`);
     console.log(`Medium: ${mediumCount} (${(mediumCount/allQuestions.length*100).toFixed(1)}%)`);
     console.log(`Hard: ${hardCount} (${(hardCount/allQuestions.length*100).toFixed(1)}%)`);
     
+    // Create backup object
+    const backup = {
+      timestamp: new Date().toISOString(),
+      questionCount: allQuestions.length,
+      catQuestionCount: catCount,
+      animalQuestionCount: animalCount,
+      questions: allQuestions
+    };
+    
+    // Save the backup
+    const backupsDir = path.join('.', 'backups');
+    if (!fs.existsSync(backupsDir)) {
+      fs.mkdirSync(backupsDir, { recursive: true });
+    }
+    
+    const backupPath = path.join(backupsDir, 'massive-trivia-backup.json');
+    console.log(`Saving backup to ${backupPath}...`);
+    fs.writeFileSync(backupPath, JSON.stringify(backup, null, 2));
+    
+    // Also save as default backup
+    const defaultBackupPath = path.join(backupsDir, 'default-trivia-backup.json');
+    console.log(`Saving as default backup to ${defaultBackupPath}...`);
+    fs.writeFileSync(defaultBackupPath, JSON.stringify(backup, null, 2));
+    
+    console.log("Backup generation complete!");
+    
+    return backup;
   } catch (error) {
-    console.error("Error generating backup:", error);
+    console.error("Error generating massive backup:", error);
+    throw error;
   }
 }
 
 // Run the script
-generateMassiveBackup().catch(err => {
-  console.error('Error in main script execution:', err);
+generateMassiveBackup().then(() => {
+  console.log("Script execution complete!");
+}).catch(error => {
+  console.error("Script failed:", error);
 });
