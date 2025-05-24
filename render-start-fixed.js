@@ -493,12 +493,42 @@ app.post("/api/trivia/stop", (req, res) => {
   }
 });
 
-// Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, 'dist')));
+// Serve static files from the dist directory - check all potential paths
+const distPublicPath = path.join(__dirname, 'dist', 'public');
+const distPath = path.join(__dirname, 'dist');
+const clientDistPath = path.join(__dirname, 'client', 'dist');
 
-// For any other request, send the index.html file
+// Check which path exists and use it
+let staticPath = distPath;
+if (fs.existsSync(distPublicPath)) {
+  console.log("Using dist/public path for static files");
+  staticPath = distPublicPath;
+} else if (fs.existsSync(distPath)) {
+  console.log("Using dist path for static files");
+} else {
+  console.warn("Warning: Could not find dist directory, static files may not be served");
+}
+
+// Serve static files
+app.use(express.static(staticPath));
+
+// For any other request, check both possible index.html locations
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  const indexPathPublic = path.join(distPublicPath, 'index.html');
+  const indexPath = path.join(distPath, 'index.html');
+  
+  if (fs.existsSync(indexPathPublic)) {
+    res.sendFile(indexPathPublic);
+  } else if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    // If we can't find the index.html, respond with an API message
+    res.json({ 
+      message: "TriviaPaws API is running", 
+      error: "Could not find frontend files",
+      paths_checked: [indexPathPublic, indexPath]
+    });
+  }
 });
 
 // Start the server

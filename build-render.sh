@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script to build and prepare the application for Render deployment
+# Build script for Render deployment
 
 # Exit on error
 set -e
@@ -7,17 +7,12 @@ set -e
 # Install dependencies
 npm install
 
-# Create production build
+# Build the client
 npm run build
 
-# Ensure backups directory exists
-mkdir -p backups
-
-# Check if we need to create database tables and load questions
-echo "Checking for database setup needs..."
-
-# Run database initialization script
-echo "Initializing database with trivia questions..."
-node render-db-setup.js
-
+# Log build complete
 echo "Build completed successfully!"
+
+# Log file structure for debugging
+echo "Checking dist directory structure:"
+find dist -type f | sort

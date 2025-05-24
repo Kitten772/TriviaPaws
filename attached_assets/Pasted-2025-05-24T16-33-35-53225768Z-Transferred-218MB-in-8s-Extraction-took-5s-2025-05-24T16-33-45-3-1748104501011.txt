@@ -1,0 +1,53 @@
+2025-05-24T16:33:35.53225768Z ==> Transferred 218MB in 8s. Extraction took 5s.
+2025-05-24T16:33:45.339317195Z ==> Using Node.js version 22.14.0 (default)
+2025-05-24T16:33:45.367530179Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2025-05-24T16:33:45.514651506Z ==> Using Bun version 1.1.0 (default)
+2025-05-24T16:33:45.514672976Z ==> Docs on specifying a bun version: https://render.com/docs/bun-version
+2025-05-24T16:33:45.567341333Z ==> Running build command 'npm install && npm run build'...
+2025-05-24T16:33:47.142204045Z 
+2025-05-24T16:33:47.142227166Z up to date, audited 510 packages in 1s
+2025-05-24T16:33:47.142239356Z 
+2025-05-24T16:33:47.142284377Z 67 packages are looking for funding
+2025-05-24T16:33:47.142291287Z   run `npm fund` for details
+2025-05-24T16:33:47.168203345Z 
+2025-05-24T16:33:47.168219366Z 7 moderate severity vulnerabilities
+2025-05-24T16:33:47.168223406Z 
+2025-05-24T16:33:47.168227616Z To address issues that do not require attention, run:
+2025-05-24T16:33:47.168231206Z   npm audit fix
+2025-05-24T16:33:47.168234776Z 
+2025-05-24T16:33:47.168238356Z To address all issues (including breaking changes), run:
+2025-05-24T16:33:47.168242106Z   npm audit fix --force
+2025-05-24T16:33:47.168245376Z 
+2025-05-24T16:33:47.168249246Z Run `npm audit` for details.
+2025-05-24T16:33:47.32511936Z 
+2025-05-24T16:33:47.3251368Z > rest-express@1.0.0 build
+2025-05-24T16:33:47.32514148Z > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-05-24T16:33:47.325146Z 
+2025-05-24T16:33:47.509074599Z vite v5.4.14 building for production...
+2025-05-24T16:33:47.55734231Z transforming...
+2025-05-24T16:33:47.780423948Z Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+2025-05-24T16:33:47.780442659Z   npx update-browserslist-db@latest
+2025-05-24T16:33:47.780447369Z   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+2025-05-24T16:33:50.48299927Z ✓ 1666 modules transformed.
+2025-05-24T16:33:50.639837243Z rendering chunks...
+2025-05-24T16:33:50.646229437Z computing gzip size...
+2025-05-24T16:33:50.655583814Z ../dist/public/index.html                   1.20 kB │ gzip:  0.62 kB
+2025-05-24T16:33:50.655669016Z ../dist/public/assets/index-D9jQP74Q.css   64.51 kB │ gzip: 11.19 kB
+2025-05-24T16:33:50.655700267Z ../dist/public/assets/index-BnBYbAEY.js   287.09 kB │ gzip: 92.36 kB
+2025-05-24T16:33:50.655986374Z ✓ built in 3.13s
+2025-05-24T16:33:50.705012812Z 
+2025-05-24T16:33:50.705034843Z   dist/index.js  32.7kb
+2025-05-24T16:33:50.705038493Z 
+2025-05-24T16:33:50.705041543Z ⚡ Done in 5ms
+2025-05-24T16:33:51.27000514Z ==> Uploading build...
+2025-05-24T16:33:59.896136656Z ==> Uploaded in 5.4s. Compression took 3.2s
+2025-05-24T16:33:59.931133224Z ==> Build successful 🎉
+2025-05-24T16:34:02.538432576Z ==> Deploying...
+2025-05-24T16:34:22.452357492Z ==> Running 'node render-start-fixed.js'
+2025-05-24T16:34:25.458974757Z Loaded 50004 questions from backup file
+2025-05-24T16:34:25.462995299Z Server running on port 3000
+2025-05-24T16:34:25.752297396Z Database connected successfully!
+2025-05-24T16:34:25.910954292Z Error: ENOENT: no such file or directory, stat '/opt/render/project/src/dist/index.html'
+2025-05-24T16:34:33.231682774Z ==> Your service is live 🎉
+2025-05-24T16:34:39.457103611Z Error: ENOENT: no such file or directory, stat '/opt/render/project/src/dist/index.html'
+2025-05-24T16:34:45.214962563Z Error: ENOENT: no such file or directory, stat '/opt/render/project/src/dist/index.html'
