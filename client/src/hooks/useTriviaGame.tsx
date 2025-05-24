@@ -53,6 +53,7 @@ export function useTriviaGame() {
   const startGameMutation = useMutation({
     mutationFn: async () => {
       try {
+        console.log("Starting new game...");
         const response = await apiRequest(
           "POST",
           "/api/trivia/start",
@@ -71,6 +72,8 @@ export function useTriviaGame() {
       }
     },
     onSuccess: (data) => {
+      console.log("Game started successfully:", data);
+      
       // Check if data exists and has the expected format
       if (!data || !data.gameId) {
         toast({
@@ -84,24 +87,48 @@ export function useTriviaGame() {
       
       // If we received questions directly in the response, use them
       const questions = data.questions || [];
+      console.log(`Received ${questions.length} questions from server`);
       
-      // Initialize game state
+      if (questions.length === 0) {
+        toast({
+          title: "No questions available",
+          description: "Couldn't retrieve any questions. Please try again.",
+          variant: "destructive",
+        });
+        setGameState((prev) => ({ ...prev, loading: false }));
+        return;
+      }
+      
+      // Process the questions to ensure they're properly formatted
+      const processedQuestions = questions.map((q, index) => {
+        // Ensure each question has the required fields
+        return {
+          question: q.question || `Question ${index + 1}`,
+          options: Array.isArray(q.options) ? q.options : ["Option A", "Option B", "Option C", "Option D"],
+          correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0,
+          explanation: q.explanation || "",
+          category: q.category || "General",
+          image: q.image
+        };
+      });
+      
+      // Initialize game state with the first question
+      const firstQuestion = processedQuestions[0];
+      
       setGameState((prev) => ({
         ...prev,
         gameState: "question",
         score: 0,
         currentQuestionIndex: 0,
-        questions: questions,
+        questions: processedQuestions,
+        currentQuestion: firstQuestion,
         gameId: data.gameId,
         loading: false,
         hasAnswered: false,
         selectedAnswer: null,
       }));
       
-      // If we have questions, load the first one
-      if (Array.isArray(questions) && questions.length > 0) {
-        loadCurrentQuestion(0, questions);
-      }
+      console.log("Game state updated, first question:", firstQuestion);
     },
     onError: (error) => {
       toast({
