@@ -50,18 +50,29 @@ export function useTriviaGame() {
       return response.json();
     },
     onSuccess: (data) => {
+      // Check if data exists and has the expected format
+      if (!data || !data.gameId) {
+        toast({
+          title: "Error starting game",
+          description: "Received invalid data from the server. Please try again.",
+          variant: "destructive",
+        });
+        setGameState((prev) => ({ ...prev, loading: false }));
+        return;
+      }
+      
+      // Initialize with empty questions array, will load from query
       setGameState((prev) => ({
         ...prev,
         gameState: "question",
         score: 0,
         currentQuestionIndex: 0,
-        questions: data.questions,
+        questions: [], // Will load from query
         gameId: data.gameId,
         loading: false,
         hasAnswered: false,
         selectedAnswer: null,
       }));
-      loadCurrentQuestion(0, data.questions);
     },
     onError: (error) => {
       toast({
@@ -106,10 +117,30 @@ export function useTriviaGame() {
 
   // Load the current question
   const loadCurrentQuestion = useCallback((index: number, questions: TriviaQuestion[]) => {
+    // Safety check for empty questions array or invalid index
+    if (!questions || !Array.isArray(questions) || questions.length === 0 || index >= questions.length) {
+      console.error("Cannot load question: Invalid questions array or index", { 
+        questionsLength: questions?.length, 
+        index 
+      });
+      return;
+    }
+    
     // Make sure we normalize the correctIndex property
     const question = questions[index];
+    
+    // Verify the question is a valid object
+    if (!question || typeof question !== 'object') {
+      console.error("Invalid question object at index", index);
+      return;
+    }
+    
+    // Create a normalized question with safe defaults for any missing properties
     const normalizedQuestion = {
       ...question,
+      id: question.id || `temp-${index}`,
+      text: question.text || question.question || "Question text unavailable",
+      options: Array.isArray(question.options) ? question.options : ["Option 1", "Option 2", "Option 3", "Option 4"],
       // Make sure correctIndex is always properly set
       correctIndex: typeof question.correctIndex === 'number' ? 
                     question.correctIndex : 
