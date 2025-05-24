@@ -1,0 +1,50 @@
+2025-05-24T07:31:26.394618642Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)
+2025-05-24T07:31:26.394620462Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)
+2025-05-24T07:31:26.394622223Z     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {
+2025-05-24T07:31:26.394624023Z   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+2025-05-24T07:31:26.394625732Z }
+2025-05-24T07:31:26.394627263Z 
+2025-05-24T07:31:26.394628923Z Node.js v22.14.0
+2025-05-24T07:36:38.614647104Z ==> Deploying...
+2025-05-24T07:37:00.466100449Z ==> Running 'node render-start.js'
+2025-05-24T07:37:00.775540015Z node:internal/modules/esm/resolve:314
+2025-05-24T07:37:00.775563037Z   return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+2025-05-24T07:37:00.775566467Z          ^
+2025-05-24T07:37:00.775568928Z 
+2025-05-24T07:37:00.775572068Z Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './pg-pool' is not defined by "exports" in /opt/render/project/src/node_modules/drizzle-orm/package.json imported from /opt/render/project/src/render-start.js
+2025-05-24T07:37:00.775576618Z     at exportsNotFound (node:internal/modules/esm/resolve:314:10)
+2025-05-24T07:37:00.775579388Z     at packageExportsResolve (node:internal/modules/esm/resolve:661:9)
+2025-05-24T07:37:00.775582378Z     at packageResolve (node:internal/modules/esm/resolve:774:12)
+2025-05-24T07:37:00.775584889Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-05-24T07:37:00.775587589Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-05-24T07:37:00.775589889Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)
+2025-05-24T07:37:00.775592389Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:634:25)
+2025-05-24T07:37:00.775594899Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)
+2025-05-24T07:37:00.77559773Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)
+2025-05-24T07:37:00.77560113Z     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {
+2025-05-24T07:37:00.77560406Z   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+2025-05-24T07:37:00.77560661Z }
+2025-05-24T07:37:00.77560892Z 
+2025-05-24T07:37:00.775611631Z Node.js v22.14.0
+2025-05-24T07:37:06.739417631Z ==> Exited with status 1
+2025-05-24T07:37:06.885522969Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2025-05-24T07:37:12.193944222Z ==> Running 'node render-start.js'
+2025-05-24T07:37:12.587705202Z node:internal/modules/esm/resolve:314
+2025-05-24T07:37:12.587725494Z   return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+2025-05-24T07:37:12.587728404Z          ^
+2025-05-24T07:37:12.587730454Z 
+2025-05-24T07:37:12.587734445Z Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './pg-pool' is not defined by "exports" in /opt/render/project/src/node_modules/drizzle-orm/package.json imported from /opt/render/project/src/render-start.js
+2025-05-24T07:37:12.587740425Z     at exportsNotFound (node:internal/modules/esm/resolve:314:10)
+2025-05-24T07:37:12.587742675Z     at packageExportsResolve (node:internal/modules/esm/resolve:661:9)
+2025-05-24T07:37:12.587746115Z     at packageResolve (node:internal/modules/esm/resolve:774:12)
+2025-05-24T07:37:12.587748506Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-05-24T07:37:12.587750746Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-05-24T07:37:12.587752836Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)
+2025-05-24T07:37:12.587754896Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:634:25)
+2025-05-24T07:37:12.587756926Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)
+2025-05-24T07:37:12.587760427Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)
+2025-05-24T07:37:12.587762597Z     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {
+2025-05-24T07:37:12.587764577Z   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+2025-05-24T07:37:12.587766587Z }
+2025-05-24T07:37:12.587768427Z 
+2025-05-24T07:37:12.587770377Z Node.js v22.14.0

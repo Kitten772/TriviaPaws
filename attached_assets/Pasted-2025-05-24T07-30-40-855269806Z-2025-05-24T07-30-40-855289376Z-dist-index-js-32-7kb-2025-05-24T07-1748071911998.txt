@@ -1,0 +1,50 @@
+2025-05-24T07:30:40.855269806Z 
+2025-05-24T07:30:40.855289376Z   dist/index.js  32.7kb
+2025-05-24T07:30:40.855293696Z 
+2025-05-24T07:30:40.855297987Z ⚡ Done in 5ms
+2025-05-24T07:30:41.701854614Z ==> Uploading build...
+2025-05-24T07:30:50.183714104Z ==> Uploaded in 5.6s. Compression took 2.9s
+2025-05-24T07:30:50.303320145Z ==> Build successful 🎉
+2025-05-24T07:30:52.879527904Z ==> Deploying...
+2025-05-24T07:31:18.650833795Z ==> Running 'node render-start.js'
+2025-05-24T07:31:18.955959488Z node:internal/modules/esm/resolve:314
+2025-05-24T07:31:18.955979029Z   return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+2025-05-24T07:31:18.955982249Z          ^
+2025-05-24T07:31:18.955984689Z 
+2025-05-24T07:31:18.955988159Z Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './pg-pool' is not defined by "exports" in /opt/render/project/src/node_modules/drizzle-orm/package.json imported from /opt/render/project/src/render-start.js
+2025-05-24T07:31:18.955992479Z     at exportsNotFound (node:internal/modules/esm/resolve:314:10)
+2025-05-24T07:31:18.955995439Z     at packageExportsResolve (node:internal/modules/esm/resolve:661:9)
+2025-05-24T07:31:18.955998869Z     at packageResolve (node:internal/modules/esm/resolve:774:12)
+2025-05-24T07:31:18.956001319Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-05-24T07:31:18.956004219Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-05-24T07:31:18.956007279Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)
+2025-05-24T07:31:18.956009739Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:634:25)
+2025-05-24T07:31:18.95601247Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)
+2025-05-24T07:31:18.956015559Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)
+2025-05-24T07:31:18.956018199Z     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {
+2025-05-24T07:31:18.95602088Z   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+2025-05-24T07:31:18.9560234Z }
+2025-05-24T07:31:18.95602587Z 
+2025-05-24T07:31:18.95602834Z Node.js v22.14.0
+2025-05-24T07:31:20.20556707Z ==> Exited with status 1
+2025-05-24T07:31:20.352332427Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2025-05-24T07:31:26.00356635Z ==> Running 'node render-start.js'
+2025-05-24T07:31:26.394576501Z node:internal/modules/esm/resolve:314
+2025-05-24T07:31:26.394592192Z   return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+2025-05-24T07:31:26.394595732Z          ^
+2025-05-24T07:31:26.394598292Z 
+2025-05-24T07:31:26.394601582Z Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './pg-pool' is not defined by "exports" in /opt/render/project/src/node_modules/drizzle-orm/package.json imported from /opt/render/project/src/render-start.js
+2025-05-24T07:31:26.394606302Z     at exportsNotFound (node:internal/modules/esm/resolve:314:10)
+2025-05-24T07:31:26.394608152Z     at packageExportsResolve (node:internal/modules/esm/resolve:661:9)
+2025-05-24T07:31:26.394610202Z     at packageResolve (node:internal/modules/esm/resolve:774:12)
+2025-05-24T07:31:26.394611902Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-05-24T07:31:26.394613702Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-05-24T07:31:26.394615312Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)
+2025-05-24T07:31:26.394616952Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:634:25)
+2025-05-24T07:31:26.394618642Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)
+2025-05-24T07:31:26.394620462Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)
+2025-05-24T07:31:26.394622223Z     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {
+2025-05-24T07:31:26.394624023Z   code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+2025-05-24T07:31:26.394625732Z }
+2025-05-24T07:31:26.394627263Z 
+2025-05-24T07:31:26.394628923Z Node.js v22.14.0
