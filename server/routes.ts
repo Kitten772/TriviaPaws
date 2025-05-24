@@ -531,8 +531,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store the randomized questions in the game state
       gameState.questions = randomizedQuestions;
       
-      // Return only the game ID to the client (not the answers!)
-      res.json({ gameId });
+      // Return both the gameId AND the questions to the client
+      res.json({ 
+        gameId, 
+        questions: randomizedQuestions.map(q => ({
+          ...q,
+          // Don't send the explanation yet - will reveal after answering
+          explanation: ""
+        }))
+      });
     } catch (error) {
       console.error("Error starting trivia game:", error);
       res.status(500).json({ error: "Failed to start trivia game" });
