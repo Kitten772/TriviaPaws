@@ -1,9 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Script to build and prepare the application for Render deployment
 
-# Update browserslist database
-echo "Updating browserslist database..."
-npx update-browserslist-db@latest
+# Exit on error
+set -e
 
-# Continue with normal build process
-echo "Building application..."
+# Install dependencies
+npm install
+
+# Create production build
 npm run build
+
+# Ensure backups directory exists
+mkdir -p backups
+
+# Check if we need to create database tables and load questions
+echo "Checking for database setup needs..."
+
+# Run database initialization script
+echo "Initializing database with trivia questions..."
+node render-db-setup.js
+
+echo "Build completed successfully!"
