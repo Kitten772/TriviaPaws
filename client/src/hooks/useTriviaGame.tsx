@@ -99,21 +99,45 @@ export function useTriviaGame() {
         return;
       }
       
+      console.log("Raw questions from server:", JSON.stringify(questions));
+      
       // Process the questions to ensure they're properly formatted
-      const processedQuestions = questions.map((q, index) => {
-        // Ensure each question has the required fields
-        return {
-          question: q.question || `Question ${index + 1}`,
-          options: Array.isArray(q.options) ? q.options : ["Option A", "Option B", "Option C", "Option D"],
+      // Manually create the processed questions array with proper typing
+      const processedQuestions = [];
+      
+      // Loop through each question from the server and create properly formatted objects
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        console.log(`Processing question ${i+1}:`, q);
+        
+        // Create a properly formatted question with all required fields
+        const formattedQuestion = {
+          question: q.question || `Question ${i + 1}`,
+          options: Array.isArray(q.options) ? [...q.options] : ["Option A", "Option B", "Option C", "Option D"],
           correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0,
           explanation: q.explanation || "",
           category: q.category || "General",
           image: q.image
         };
-      });
+        
+        processedQuestions.push(formattedQuestion);
+      }
+      
+      console.log("Processed questions:", processedQuestions);
+      
+      if (processedQuestions.length === 0) {
+        toast({
+          title: "Error processing questions",
+          description: "Couldn't process the questions from the server. Please try again.",
+          variant: "destructive",
+        });
+        setGameState((prev) => ({ ...prev, loading: false }));
+        return;
+      }
       
       // Initialize game state with the first question
       const firstQuestion = processedQuestions[0];
+      console.log("First question to display:", firstQuestion);
       
       setGameState((prev) => ({
         ...prev,
@@ -128,7 +152,7 @@ export function useTriviaGame() {
         selectedAnswer: null,
       }));
       
-      console.log("Game state updated, first question:", firstQuestion);
+      console.log("Game state updated with question:", firstQuestion);
     },
     onError: (error) => {
       toast({
