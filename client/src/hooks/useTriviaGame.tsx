@@ -86,17 +86,65 @@ export function useTriviaGame() {
       }
       
       // If we received questions directly in the response, use them
-      const questions = data.questions || [];
-      console.log(`Received ${questions.length} questions from server`);
+      console.log("Full server response:", data);
+      
+      let questions = [];
+      if (data.questions && Array.isArray(data.questions)) {
+        questions = data.questions;
+        console.log(`Received ${questions.length} questions from server in expected format`);
+      } else {
+        // Try to detect questions in other possible formats
+        console.log("Questions not in expected format, trying to detect alternative format");
+        if (typeof data === 'object') {
+          // Look for any array property that might contain questions
+          for (const key in data) {
+            if (Array.isArray(data[key]) && data[key].length > 0) {
+              // Check if this array contains objects that look like questions
+              if (data[key][0] && (data[key][0].question || data[key][0].text)) {
+                console.log(`Found possible questions array in property "${key}"`);
+                questions = data[key];
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+      console.log(`Working with ${questions.length} questions`);
       
       if (questions.length === 0) {
+        // Try to use hardcoded fallback questions just to get the game working
+        console.log("No questions received from server, using emergency fallback questions");
         toast({
-          title: "No questions available",
-          description: "Couldn't retrieve any questions. Please try again.",
+          title: "Using fallback questions",
+          description: "Couldn't retrieve questions from the server. Using local questions instead.",
           variant: "destructive",
         });
-        setGameState((prev) => ({ ...prev, loading: false }));
-        return;
+        
+        // Emergency fallback questions
+        questions = [
+          {
+            question: "Which famous internet cat was known for its grumpy facial expression?",
+            options: ["Lil Bub", "Grumpy Cat", "Maru", "Keyboard Cat"],
+            correctIndex: 1,
+            explanation: "Grumpy Cat (real name Tardar Sauce) became famous for her permanently grumpy facial expression.",
+            category: "Famous Cats"
+          },
+          {
+            question: "What is the average lifespan of an indoor cat?",
+            options: ["5-8 years", "10-15 years", "15-20 years", "20-25 years"],
+            correctIndex: 1,
+            explanation: "Indoor cats typically live between 10-15 years, though some may live up to 20 years.",
+            category: "Cat Facts"
+          },
+          {
+            question: "Which of these cat breeds is known for having no fur?",
+            options: ["Persian", "Maine Coon", "Sphynx", "Siamese"],
+            correctIndex: 2,
+            explanation: "The Sphynx cat is known for being hairless, although they may have a fine layer of fuzz.",
+            category: "Cat Breeds"
+          }
+        ];
       }
       
       console.log("Raw questions from server:", JSON.stringify(questions));
