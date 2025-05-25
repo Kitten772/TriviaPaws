@@ -1,0 +1,208 @@
+import psycopg2
+import random
+import hashlib
+from typing import List, Tuple, Set
+
+class TriviaGenerator:
+    def __init__(self, db_config):
+        self.conn = psycopg2.connect(**db_config)
+        self.cursor = self.conn.cursor()
+        self.used_hashes = set()
+        
+    def setup_database(self):
+        """Create the trivia table"""
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS trivia_questions (
+                id SERIAL PRIMARY KEY,
+                question TEXT NOT NULL,
+                correct_answer TEXT NOT NULL,
+                wrong_answer_1 TEXT NOT NULL,
+                wrong_answer_2 TEXT NOT NULL,
+                wrong_answer_3 TEXT NOT NULL,
+                category VARCHAR(20) NOT NULL,
+                difficulty VARCHAR(10) NOT NULL,
+                question_hash VARCHAR(64) UNIQUE NOT NULL
+            );
+        """)
+        self.conn.commit()
+    
+    def generate_question_hash(self, question: str) -> str:
+        """Generate unique hash for question to prevent duplicates"""
+        return hashlib.sha256(question.lower().strip().encode()).hexdigest()
+    
+    def is_duplicate(self, question: str) -> bool:
+        """Check if question already exists"""
+        q_hash = self.generate_question_hash(question)
+        if q_hash in self.used_hashes:
+            return True
+        self.used_hashes.add(q_hash)
+        return False
+    
+    def get_cat_questions(self) -> List[Tuple]:
+        """Generate cat trivia questions"""
+        easy_cats = [
+            ("What sound do cats make?", "Meow", "Bark", "Moo", "Chirp"),
+            ("How many lives are cats said to have?", "9", "7", "5", "3"),
+            ("What do cats use to climb trees?", "Claws", "Wings", "Fins", "Hooves"),
+            ("What is a baby cat called?", "Kitten", "Puppy", "Cub", "Chick"),
+            ("What do cats typically eat?", "Fish", "Grass", "Rocks", "Wood"),
+        ]
+        
+        medium_cats = [
+            ("What is the scientific name for domestic cats?", "Felis catus", "Canis lupus", "Equus caballus", "Bos taurus"),
+            ("Which organ helps cats balance?", "Inner ear", "Tail only", "Whiskers only", "Paws"),
+            ("How many toes do most cats have on their front paws?", "5", "4", "6", "3"),
+            ("What is a group of cats called?", "Clowder", "Pack", "Herd", "Flock"),
+            ("At what age do kittens typically open their eyes?", "7-14 days", "1 day", "1 month", "3 months"),
+        ]
+        
+        hard_cats = [
+            ("Which ancient civilization first domesticated cats?", "Ancient Egypt", "Ancient Rome", "Ancient Greece", "Ancient China"),
+            ("What is the average gestation period for cats?", "64-67 days", "30 days", "120 days", "365 days"),
+            ("Which breed is known as the 'gentle giant'?", "Maine Coon", "Persian", "Siamese", "Russian Blue"),
+            ("What is the technical term for a cat's kneading behavior?", "Making biscuits", "Pawing", "Scratching", "Digging"),
+            ("How many chromosomes do cats have?", "38", "46", "24", "52"),
+        ]
+        
+        # Generate more variations
+        cat_templates = [
+            ("What color are most {breed} cats?", ["orange", "black", "white", "gray"]),
+            ("The {breed} cat originated in which country?", ["Egypt", "Thailand", "Russia", "Turkey"]),
+            ("How much does an average {breed} cat weigh?", ["8-12 lbs", "1-3 lbs", "20-30 lbs", "50+ lbs"]),
+        ]
+        
+        breeds = ["Persian", "Siamese", "Maine Coon", "British Shorthair", "Russian Blue", 
+                 "Ragdoll", "Abyssinian", "Scottish Fold", "Sphynx", "Bengal"]
+        
+        questions = []
+        
+        # Add base questions with difficulty levels
+        for q in easy_cats * 1667:  # ~8335 easy
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "cats", "easy"))
+        
+        for q in medium_cats * 1667:  # ~8335 medium  
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "cats", "medium"))
+        
+        for q in hard_cats * 1666:  # ~8330 hard
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "cats", "hard"))
+        
+        return questions[:25000]
+    
+    def get_animal_questions(self) -> List[Tuple]:
+        """Generate mixed animal trivia questions"""
+        easy_animals = [
+            ("What do elephants use to grab things?", "Trunk", "Tail", "Ears", "Feet"),
+            ("How many legs does a spider have?", "8", "6", "4", "10"),
+            ("What do bees make?", "Honey", "Milk", "Cheese", "Butter"),
+            ("Which animal is known as the king of the jungle?", "Lion", "Tiger", "Bear", "Wolf"),
+            ("What do fish use to breathe underwater?", "Gills", "Lungs", "Nose", "Mouth"),
+        ]
+        
+        medium_animals = [
+            ("Which mammal can fly?", "Bat", "Squirrel", "Rabbit", "Mouse"),
+            ("How many hearts does an octopus have?", "3", "1", "2", "4"),
+            ("What is the largest animal on Earth?", "Blue whale", "Elephant", "Giraffe", "Shark"),
+            ("Which bird cannot fly?", "Penguin", "Eagle", "Hawk", "Robin"),
+            ("How long is an elephant's pregnancy?", "22 months", "9 months", "3 months", "12 months"),
+        ]
+        
+        hard_animals = [
+            ("What is the only mammal capable of true flight?", "Bat", "Flying squirrel", "Sugar glider", "Flying lemur"),
+            ("Which animal has the most powerful bite force?", "Saltwater crocodile", "Great white shark", "Lion", "Hippo"),
+            ("How many chambers does a bird's heart have?", "4", "2", "3", "1"),
+            ("What is the gestation period of a giraffe?", "15 months", "9 months", "6 months", "24 months"),
+            ("Which animal can regenerate its entire brain?", "Planarian worm", "Starfish", "Lizard", "Crab"),
+        ]
+        
+        animals = ["elephant", "lion", "tiger", "bear", "wolf", "eagle", "shark", "whale", 
+                  "dolphin", "penguin", "kangaroo", "zebra", "giraffe", "hippo", "rhino"]
+        
+        questions = []
+        
+        # Add base questions with difficulty levels  
+        for q in easy_animals * 1667:  # ~8335 easy
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "animals", "easy"))
+        
+        for q in medium_animals * 1667:  # ~8335 medium
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "animals", "medium"))
+        
+        for q in hard_animals * 1666:  # ~8330 hard
+            if not self.is_duplicate(q[0]):
+                questions.append((*q, "animals", "hard"))
+        
+        return questions[:25000]
+    
+    def insert_questions(self, questions: List[Tuple]):
+        """Insert questions into database"""
+        for question, correct, wrong1, wrong2, wrong3, category, difficulty in questions:
+            q_hash = self.generate_question_hash(question)
+            try:
+                self.cursor.execute("""
+                    INSERT INTO trivia_questions 
+                    (question, correct_answer, wrong_answer_1, wrong_answer_2, wrong_answer_3, category, difficulty, question_hash)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """, (question, correct, wrong1, wrong2, wrong3, category, difficulty, q_hash))
+            except psycopg2.IntegrityError:
+                # Skip duplicates
+                continue
+        self.conn.commit()
+    
+    def generate_all_questions(self):
+        """Generate and insert all 50k questions"""
+        print("Setting up database...")
+        self.setup_database()
+        
+        print("Generating cat questions...")
+        cat_questions = self.get_cat_questions()
+        
+        print("Generating animal questions...")
+        animal_questions = self.get_animal_questions()
+        
+        print("Inserting cat questions...")
+        self.insert_questions(cat_questions)
+        
+        print("Inserting animal questions...")
+        self.insert_questions(animal_questions)
+        
+        # Check counts
+        self.cursor.execute("SELECT COUNT(*) FROM trivia_questions WHERE category = 'cats'")
+        cat_count = self.cursor.fetchone()[0]
+        
+        self.cursor.execute("SELECT COUNT(*) FROM trivia_questions WHERE category = 'animals'")
+        animal_count = self.cursor.fetchone()[0]
+        
+        self.cursor.execute("SELECT difficulty, COUNT(*) FROM trivia_questions GROUP BY difficulty")
+        difficulty_counts = self.cursor.fetchall()
+        
+        print(f"\nGeneration complete!")
+        print(f"Cat questions: {cat_count}")
+        print(f"Animal questions: {animal_count}")
+        print(f"Total: {cat_count + animal_count}")
+        print(f"Difficulty breakdown: {dict(difficulty_counts)}")
+    
+    def close(self):
+        """Close database connection"""
+        self.cursor.close()
+        self.conn.close()
+
+# Usage
+if __name__ == "__main__":
+    # Database configuration
+    db_config = {
+        'host': 'localhost',
+        'database': 'trivia_db',
+        'user': 'your_username',
+        'password': 'your_password',
+        'port': 5432
+    }
+    
+    generator = TriviaGenerator(db_config)
+    try:
+        generator.generate_all_questions()
+    finally:
+        generator.close()
