@@ -349,40 +349,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           console.log(`Using ${questions.length} questions from database`);
         } else {
-          // Still not enough, fall back to OpenAI
-          console.log("Not enough questions in database + external API, generating with OpenAI");
-          try {
-            const questionData = await generateTriviaQuestions(
-              validatedBody.difficulty,
-              validatedBody.category,
-              combinedQuestionsNeeded
-            );
-            
-            // Validate the generated questions
-            const openaiQuestions = [];
-            for (const q of questionData) {
-              try {
-                const validated = triviaQuestion.parse(q);
-                openaiQuestions.push(validated);
-              } catch (e) {
-                console.error("Invalid question from OpenAI:", q, e);
-              }
-            }
-            
-            console.log(`Generated ${openaiQuestions.length} questions with OpenAI`);
-            
-            // Combine all sources of questions and ensure we have the right amount
-            questions = [...dbQuestions, ...externalQuestions, ...openaiQuestions].slice(0, questionCount);
-          } catch (openaiError) {
-            console.log("Falling back to hardcoded questions:", openaiError);
-            // Fall back to hardcoded questions as a last resort
-            questions = validatedBody.category === 'cats' 
-              ? catTriviaQuestions 
-              : [...catTriviaQuestions, ...mixedAnimalTriviaQuestions];
-            
-            // Randomize and take just what we need
-            questions = shuffleArray(questions).slice(0, questionCount);
-          }
+          // Fall back to hardcoded questions as a last resort
+          console.log("Not enough questions in database, using hardcoded backup");
+          questions = validatedBody.category === 'cats' 
+            ? catTriviaQuestions 
+            : [...catTriviaQuestions, ...mixedAnimalTriviaQuestions];
+          
+          // Randomize and take just what we need
+          questions = shuffleArray(questions).slice(0, questionCount);
         }
       } catch (error) {
         // In case of database errors, fall back to hardcoded questions
