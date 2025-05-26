@@ -86,28 +86,15 @@ export function useTriviaGame() {
       }
       
       // If we received questions directly in the response, use them
-      console.log("Full server response:", data);
+      console.log("Full server response:", JSON.stringify(data, null, 2));
       
       let questions = [];
-      if (data.questions && Array.isArray(data.questions)) {
+      if (data && data.questions && Array.isArray(data.questions)) {
         questions = data.questions;
-        console.log(`Received ${questions.length} questions from server in expected format`);
+        console.log(`SUCCESS: Received ${questions.length} questions from your database!`);
       } else {
-        // Try to detect questions in other possible formats
-        console.log("Questions not in expected format, trying to detect alternative format");
-        if (typeof data === 'object') {
-          // Look for any array property that might contain questions
-          for (const key in data) {
-            if (Array.isArray(data[key]) && data[key].length > 0) {
-              // Check if this array contains objects that look like questions
-              if (data[key][0] && (data[key][0].question || data[key][0].text)) {
-                console.log(`Found possible questions array in property "${key}"`);
-                questions = data[key];
-                break;
-              }
-            }
-          }
-        }
+        console.log("ERROR: Questions not found in server response");
+        console.log("Response structure:", Object.keys(data || {}));
       }
       
       console.log(`Working with ${questions.length} questions`);
