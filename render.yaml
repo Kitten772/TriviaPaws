@@ -3,7 +3,7 @@ services:
     name: purrfect-trivia
     env: node
     buildCommand: npm install && ./build-render.sh
-    startCommand: node server.js
+    startCommand: node render-start-fixed.js
     envVars:
       - key: NODE_ENV
         value: production
