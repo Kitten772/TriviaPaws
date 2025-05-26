@@ -7,7 +7,7 @@ import { triviaQuestion, triviaGameState, triviaQuestions, type TriviaQuestion }
 import { db } from "./db";
 import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
-import { fetchExternalTriviaQuestions } from "./externalTrivia";
+// Removed external trivia import - using only database questions
 
 // Store active games in memory
 const activeGames = new Map();
