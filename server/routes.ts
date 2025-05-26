@@ -220,14 +220,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Looking for ${questionCount} ${validatedBody.category} questions with ${validatedBody.difficulty} difficulty`);
         
-        // Get random questions from the database (no duplicates exist!)
+        // Simplified approach: just get random questions from the database
         dbQuestions = await db.select()
           .from(triviaQuestions)
           .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
           .orderBy(sql`RANDOM()`)
-          .limit(questionCount);
+          .limit(questionCount * 2); // Get extra to ensure we have enough
           
-        console.log(`Found ${dbQuestions.length} questions in database`);
+        // Clean up question text and remove any duplicates
+        const seenQuestions = new Set();
+        const cleanedQuestions = [];
+        
+        for (const question of dbQuestions) {
+          // Clean up any question numbering
+          const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+          const questionKey = cleanedQuestion.toLowerCase().trim();
+          
+          if (!seenQuestions.has(questionKey) && cleanedQuestions.length < questionCount) {
+            seenQuestions.add(questionKey);
+            cleanedQuestions.push({
+              ...question,
+              question: cleanedQuestion
+            });
+          }
+        }
+        
+        dbQuestions = cleanedQuestions;
         
         // Use only our database questions (we have 10,000 high-quality questions!)
         if (dbQuestions.length >= questionCount) {
