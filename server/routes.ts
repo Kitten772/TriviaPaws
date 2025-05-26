@@ -332,26 +332,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .slice(0, questionCount);
         }
         
-        // Get a few questions from external trivia API to mix in with our database questions
-        let externalQuestions: TriviaQuestion[] = [];
-        try {
-          // Try to get 2-3 questions from external API
-          const externalCount = Math.min(3, Math.floor(questionCount * 0.3));
-          externalQuestions = await fetchExternalTriviaQuestions(
-            validatedBody.difficulty,
-            externalCount
-          );
-          console.log(`Got ${externalQuestions.length} questions from external API`);
-        } catch (apiError) {
-          console.log("Could not fetch external questions:", apiError);
-        }
-        
-        // If we have enough database + external questions, use them
-        const combinedQuestionsNeeded = questionCount - externalQuestions.length;
-        
-        if (dbQuestions.length >= combinedQuestionsNeeded) {
+        // Use only our database questions (we have 10,000 high-quality questions!)
+        if (dbQuestions.length >= questionCount) {
           // Convert database questions to our API format
-          const formattedDbQuestions = dbQuestions.slice(0, combinedQuestionsNeeded).map((q: any) => ({
+          const formattedDbQuestions = dbQuestions.slice(0, questionCount).map((q: any) => ({
             question: q.question,
             options: q.options as string[],
             correctIndex: q.correctIndex,
@@ -360,13 +344,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             image: q.image || undefined
           }));
           
-          // Combine database questions with external questions
-          questions = [...formattedDbQuestions, ...externalQuestions];
+          // Shuffle the final questions for variety
+          questions = shuffleArray(formattedDbQuestions);
           
-          // Final shuffle to mix database and external questions
-          questions = shuffleArray(questions);
-          
-          console.log(`Using ${formattedDbQuestions.length} questions from database and ${externalQuestions.length} from external API`);
+          console.log(`Using ${questions.length} questions from database`);
         } else {
           // Still not enough, fall back to OpenAI
           console.log("Not enough questions in database + external API, generating with OpenAI");
