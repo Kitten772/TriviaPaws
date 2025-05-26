@@ -220,117 +220,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Looking for ${questionCount} ${validatedBody.category} questions with ${validatedBody.difficulty} difficulty`);
         
-        if (validatedBody.category === "cats") {
-          // For cats category, get a truly varied set of questions
-          // This ensures we get questions from different categories and styles
-          const catQuestions = await db.select()
-            .from(triviaQuestions)
-            .where(
-              and(
-                eq(triviaQuestions.difficulty, validatedBody.difficulty)
-                // Don't restrict by category - we want all cat questions
-              )
-            )
-            .orderBy(sql`RANDOM()`)
-            .limit(questionCount * 10);
-            
-          // Make sure we have a good variety by getting different types of questions
-          const uniqueCategories = new Set();
-          const variedQuestions = [];
-          const questionTexts = new Set(); // Track question text to avoid duplicates
+        // Simplified approach: just get random questions from the database
+        dbQuestions = await db.select()
+          .from(triviaQuestions)
+          .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
+          .orderBy(sql`RANDOM()`)
+          .limit(questionCount * 2); // Get extra to ensure we have enough
           
-          // First pass: add questions with unique categories
-          for (const question of catQuestions) {
-            // Clean up any question numbering (like "Quiz #123: What is...")
-            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
-            
-            if (!uniqueCategories.has(question.category) && 
-                variedQuestions.length < questionCount && 
-                !questionTexts.has(cleanedQuestion.toLowerCase())) {
-              uniqueCategories.add(question.category);
-              questionTexts.add(cleanedQuestion.toLowerCase());
-              
-              // Create a cleaned version of the question
-              variedQuestions.push({
-                ...question,
-                question: cleanedQuestion
-              });
-            }
+        // Clean up question text and remove any duplicates
+        const seenQuestions = new Set();
+        const cleanedQuestions = [];
+        
+        for (const question of dbQuestions) {
+          // Clean up any question numbering
+          const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
+          const questionKey = cleanedQuestion.toLowerCase().trim();
+          
+          if (!seenQuestions.has(questionKey) && cleanedQuestions.length < questionCount) {
+            seenQuestions.add(questionKey);
+            cleanedQuestions.push({
+              ...question,
+              question: cleanedQuestion
+            });
           }
-          
-          // Second pass: fill remaining slots with other questions
-          for (const question of catQuestions) {
-            // Clean up any question numbering
-            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
-            
-            if (variedQuestions.length < questionCount && 
-                !questionTexts.has(cleanedQuestion.toLowerCase())) {
-              questionTexts.add(cleanedQuestion.toLowerCase());
-              
-              // Create a cleaned version of the question
-              variedQuestions.push({
-                ...question,
-                question: cleanedQuestion
-              });
-            }
-          }
-          
-          // Final shuffle for maximum randomness
-          dbQuestions = shuffleArray(variedQuestions)
-            .slice(0, questionCount);
-        } else {
-          // For mixed category, get a truly varied set of questions
-          const allAnimalQuestions = await db.select()
-            .from(triviaQuestions)
-            .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
-            .orderBy(sql`RANDOM()`)
-            .limit(questionCount * 10);
-            
-          // Ensure we get a variety of animal types
-          const uniqueCategories = new Set();
-          const variedQuestions = [];
-          const questionTexts = new Set(); // Track question text to avoid duplicates
-          
-          // First pass: add questions with unique categories
-          for (const question of allAnimalQuestions) {
-            // Clean up any question numbering (like "Quiz #123: What is...")
-            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
-            
-            if (!uniqueCategories.has(question.category) && 
-                variedQuestions.length < questionCount && 
-                !questionTexts.has(cleanedQuestion.toLowerCase())) {
-              uniqueCategories.add(question.category);
-              questionTexts.add(cleanedQuestion.toLowerCase());
-              
-              // Create a cleaned version of the question
-              variedQuestions.push({
-                ...question,
-                question: cleanedQuestion
-              });
-            }
-          }
-          
-          // Second pass: fill remaining slots with other questions
-          for (const question of allAnimalQuestions) {
-            // Clean up any question numbering
-            const cleanedQuestion = question.question.replace(/^.*?(?:Quiz|Question|Q)\s*#?\d+\s*:?\s*/i, '');
-            
-            if (variedQuestions.length < questionCount && 
-                !questionTexts.has(cleanedQuestion.toLowerCase())) {
-              questionTexts.add(cleanedQuestion.toLowerCase());
-              
-              // Create a cleaned version of the question
-              variedQuestions.push({
-                ...question,
-                question: cleanedQuestion
-              });
-            }
-          }
-          
-          // Final shuffle for maximum randomness
-          dbQuestions = shuffleArray(variedQuestions)
-            .slice(0, questionCount);
         }
+        
+        dbQuestions = cleanedQuestions;
         
         // Use only our database questions (we have 10,000 high-quality questions!)
         if (dbQuestions.length >= questionCount) {
