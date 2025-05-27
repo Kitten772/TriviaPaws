@@ -326,8 +326,18 @@ app.post("/api/trivia/start", async (req, res) => {
     // Store game state
     activeGames.set(gameId, gameState);
     
-    // Return just the game ID (not the answers!)
-    res.json({ gameId });
+    // Return the game ID and questions for the frontend
+    res.json({ 
+      gameId,
+      questions: randomizedQuestions.map(q => ({
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        category: q.category,
+        image: q.image
+      }))
+    });
   } catch (error) {
     console.error("Error starting game:", error);
     res.status(500).json({ error: "Failed to start game" });
