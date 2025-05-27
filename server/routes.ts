@@ -220,12 +220,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Looking for ${questionCount} ${validatedBody.category} questions with ${validatedBody.difficulty} difficulty`);
         
-        // Simplified approach: just get random questions from the database
+        // Get truly random questions from the database with better randomization
         dbQuestions = await db.select()
           .from(triviaQuestions)
           .where(eq(triviaQuestions.difficulty, validatedBody.difficulty))
           .orderBy(sql`RANDOM()`)
-          .limit(questionCount * 2); // Get extra to ensure we have enough
+          .limit(questionCount * 3); // Get more extras to ensure variety
           
         // Clean up question text and remove any duplicates
         const seenQuestions = new Set();

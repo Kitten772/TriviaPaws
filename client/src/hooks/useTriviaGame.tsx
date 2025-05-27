@@ -133,7 +133,7 @@ export function useTriviaGame() {
       
       // Process the questions to ensure they're properly formatted
       // Manually create the processed questions array with proper typing
-      const processedQuestions = [];
+      const processedQuestions: TriviaQuestion[] = [];
       
       // Loop through each question from the server and create properly formatted objects
       for (let i = 0; i < questions.length; i++) {
@@ -404,7 +404,15 @@ export function useTriviaGame() {
   const nextQuestion = () => {
     const nextIndex = gameState.currentQuestionIndex + 1;
     
-    if (nextIndex >= gameState.totalQuestions) {
+    if (nextIndex >= gameState.totalQuestions || nextIndex >= gameState.questions.length) {
+      finishGame();
+      return;
+    }
+    
+    // Get the next question directly from our questions array
+    const nextQuestion = gameState.questions[nextIndex];
+    
+    if (!nextQuestion) {
       finishGame();
       return;
     }
@@ -412,13 +420,11 @@ export function useTriviaGame() {
     setGameState((prev) => ({
       ...prev,
       currentQuestionIndex: nextIndex,
-      loading: true,
+      currentQuestion: nextQuestion,
+      loading: false,
+      hasAnswered: false,
+      selectedAnswer: null,
     }));
-    
-    // Small delay to show loading state
-    setTimeout(() => {
-      loadCurrentQuestion(nextIndex, gameState.questions);
-    }, 500);
   };
 
   // Start the timer
