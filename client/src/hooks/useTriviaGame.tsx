@@ -102,11 +102,6 @@ export function useTriviaGame() {
       if (questions.length === 0) {
         // Try to use hardcoded fallback questions just to get the game working
         console.log("No questions received from server, using emergency fallback questions");
-        toast({
-          title: "Using fallback questions",
-          description: "Couldn't retrieve questions from the server. Using local questions instead.",
-          variant: "destructive",
-        });
         
         // Emergency fallback questions
         questions = [
