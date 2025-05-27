@@ -29,7 +29,7 @@ if (dbUrl) {
     const { Pool } = pg;
     pool = new Pool({
       connectionString: dbUrl,
-      ssl: { rejectUnauthorized: false } // Required for Render PostgreSQL
+      ssl: dbUrl.includes('localhost') ? false : { rejectUnauthorized: false }
     });
     
     // Test connection
